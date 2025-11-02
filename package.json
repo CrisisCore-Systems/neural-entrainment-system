@@ -1,0 +1,39 @@
+{
+  "name": "neural-entrainment-system",
+  "version": "3.0.0",
+  "description": "CrisisCore Neural Interface - Advanced neural entrainment platform",
+  "main": "Monolithic.html",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ tests/"
+  },
+  "keywords": [
+    "neural",
+    "entrainment",
+    "binaural-beats",
+    "cognitive-enhancement"
+  ],
+  "author": "CrisisCore-Systems",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@types/jest": "^29.5.5"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ]
+  }
+}
