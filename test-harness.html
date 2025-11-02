@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Entrainment System - Module Test Harness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0a0a0a;
+            color: #eaeaea;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #ff6600;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #ffaa00;
+            margin: 30px 0 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .module-section {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        button {
+            background: #ff6600;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #ff8833;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .status-item {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .status-label {
+            color: #999;
+        }
+
+        .status-value {
+            color: #0f0;
+        }
+
+        canvas {
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: #000;
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+        }
+
+        .log {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 5px;
+        }
+
+        .log-info { color: #6cf; }
+        .log-success { color: #0f0; }
+        .log-warning { color: #fa0; }
+        .log-error { color: #f33; }
+
+        input[type="range"] {
+            width: 200px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .slider-label {
+            min-width: 120px;
+        }
+
+        .slider-value {
+            min-width: 60px;
+            color: #ff6600;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Neural Entrainment System - Module Test Harness</h1>
+        <p style="color: #999; margin-bottom: 30px;">Isolated testing environment for audio, visualization, and session modules</p>
+
+        <!-- Audio Engine Test -->
+        <div class="module-section">
+            <h2>🔊 Audio Engine</h2>
+            <div class="controls">
+                <button id="audioInit">Initialize Audio</button>
+                <button id="audioCleanup" disabled>Cleanup Audio</button>
+            </div>
+            <div class="slider-container">
+                <span class="slider-label">Volume:</span>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" disabled>
+                <span class="slider-value" id="volumeValue">0.30</span>
+            </div>
+            <div class="slider-container">
+                <span class="slider-label">Beat Frequency:</span>
+                <input type="range" id="freqSlider" min="0.5" max="40" step="0.5" value="5" disabled>
+                <span class="slider-value" id="freqValue">5.0 Hz</span>
+            </div>
+            <div class="status">
+                <div class="status-item">
+                    <span class="status-label">Status:</span>
+                    <span class="status-value" id="audioStatus">Not Initialized</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Enabled:</span>
+                    <span class="status-value" id="audioEnabled">Yes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization Engine Test -->
+        <div class="module-section">
+            <h2>🌀 Visualization Engine</h2>
+            <div class="controls">
+                <button id="vizInit">Initialize Visualization</button>
+                <button id="vizStart" disabled>Start Animation</button>
+                <button id="vizStop" disabled>Stop Animation</button>
+                <button id="vizCleanup" disabled>Cleanup Visualization</button>
+            </div>
+            <div class="slider-container">
+                <span class="slider-label">Arousal:</span>
+                <input type="range" id="arousalSlider" min="0" max="1" step="0.1" value="0.5" disabled>
+                <span class="slider-value" id="arousalValue">0.5</span>
+            </div>
+            <div class="slider-container">
+                <span class="slider-label">Focus:</span>
+                <input type="range" id="focusSlider" min="0" max="1" step="0.1" value="0.5" disabled>
+                <span class="slider-value" id="focusValue">0.5</span>
+            </div>
+            <div class="controls">
+                <button id="vizSessionToggle" disabled>Toggle Session Active</button>
+            </div>
+            <canvas id="testCanvas"></canvas>
+            <div class="status">
+                <div class="status-item">
+                    <span class="status-label">Running:</span>
+                    <span class="status-value" id="vizRunning">No</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Session Active:</span>
+                    <span class="status-value" id="vizSession">No</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Particle Count:</span>
+                    <span class="status-value" id="vizParticles">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Manager Test -->
+        <div class="module-section">
+            <h2>⏱️ Session Manager</h2>
+            <div class="controls">
+                <button id="sessionStart">Start Session (30s)</button>
+                <button id="sessionPause" disabled>Pause</button>
+                <button id="sessionResume" disabled>Resume</button>
+                <button id="sessionStop" disabled>Stop</button>
+            </div>
+            <div class="controls">
+                <button id="sessionNextPhase" disabled>Next Phase</button>
+                <button id="sessionSave" disabled>Save State</button>
+                <button id="sessionLoad">Load State</button>
+                <button id="sessionClear">Clear Saved State</button>
+            </div>
+            <div class="status">
+                <div class="status-item">
+                    <span class="status-label">Active:</span>
+                    <span class="status-value" id="sessionActive">No</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Paused:</span>
+                    <span class="status-value" id="sessionPaused">No</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Current Phase:</span>
+                    <span class="status-value" id="sessionPhase">None</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Phase Progress:</span>
+                    <span class="status-value" id="sessionPhaseProgress">0%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Session Progress:</span>
+                    <span class="status-value" id="sessionProgress">0%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Beat Frequency:</span>
+                    <span class="status-value" id="sessionBeatFreq">0 Hz</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Log -->
+        <div class="module-section">
+            <h2>📋 Event Log</h2>
+            <div class="log" id="eventLog"></div>
+            <button id="clearLog">Clear Log</button>
+        </div>
+    </div>
+
+    <!-- Load Modules -->
+    <script src="src/audio/AudioEngine.js"></script>
+    <script src="src/visualization/VisualizationEngine.js"></script>
+    <script src="src/session/SessionManager.js"></script>
+
+    <!-- Test Harness Logic -->
+    <script>
+        // Initialize modules
+        let audioEngine = null;
+        let vizEngine = null;
+        let sessionManager = null;
+        let updateInterval = null;
+
+        // Logging
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        document.getElementById('clearLog').addEventListener('click', () => {
+            document.getElementById('eventLog').innerHTML = '';
+        });
+
+        // Audio Engine Controls
+        document.getElementById('audioInit').addEventListener('click', async () => {
+            try {
+                audioEngine = new AudioEngine();
+                const success = await audioEngine.initialize();
+                if (success) {
+                    log('Audio engine initialized successfully', 'success');
+                    document.getElementById('audioStatus').textContent = 'Initialized';
+                    document.getElementById('audioInit').disabled = true;
+                    document.getElementById('audioCleanup').disabled = false;
+                    document.getElementById('volumeSlider').disabled = false;
+                    document.getElementById('freqSlider').disabled = false;
+                } else {
+                    log('Audio initialization failed', 'error');
+                }
+            } catch (error) {
+                log(`Audio error: ${error.message}`, 'error');
+            }
+        });
+
+        document.getElementById('audioCleanup').addEventListener('click', () => {
+            if (audioEngine) {
+                audioEngine.cleanup();
+                log('Audio engine cleaned up', 'info');
+                document.getElementById('audioStatus').textContent = 'Not Initialized';
+                document.getElementById('audioInit').disabled = false;
+                document.getElementById('audioCleanup').disabled = true;
+                document.getElementById('volumeSlider').disabled = true;
+                document.getElementById('freqSlider').disabled = true;
+            }
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            const volume = parseFloat(e.target.value);
+            document.getElementById('volumeValue').textContent = volume.toFixed(2);
+            if (audioEngine) {
+                audioEngine.setVolume(volume);
+                log(`Volume set to ${volume.toFixed(2)}`, 'info');
+            }
+        });
+
+        document.getElementById('freqSlider').addEventListener('input', (e) => {
+            const freq = parseFloat(e.target.value);
+            document.getElementById('freqValue').textContent = `${freq.toFixed(1)} Hz`;
+            if (audioEngine) {
+                audioEngine.setBeatFrequency(freq);
+                log(`Beat frequency set to ${freq.toFixed(1)} Hz`, 'info');
+            }
+        });
+
+        // Visualization Engine Controls
+        document.getElementById('vizInit').addEventListener('click', () => {
+            try {
+                const canvas = document.getElementById('testCanvas');
+                vizEngine = new VisualizationEngine(canvas);
+                vizEngine.initialize();
+                log('Visualization engine initialized successfully', 'success');
+                document.getElementById('vizInit').disabled = true;
+                document.getElementById('vizStart').disabled = false;
+                document.getElementById('vizCleanup').disabled = false;
+                document.getElementById('arousalSlider').disabled = false;
+                document.getElementById('focusSlider').disabled = false;
+                document.getElementById('vizSessionToggle').disabled = false;
+            } catch (error) {
+                log(`Visualization error: ${error.message}`, 'error');
+            }
+        });
+
+        document.getElementById('vizStart').addEventListener('click', () => {
+            if (vizEngine) {
+                vizEngine.start();
+                log('Visualization started', 'success');
+                document.getElementById('vizStart').disabled = true;
+                document.getElementById('vizStop').disabled = false;
+                updateVizStatus();
+            }
+        });
+
+        document.getElementById('vizStop').addEventListener('click', () => {
+            if (vizEngine) {
+                vizEngine.stop();
+                log('Visualization stopped', 'info');
+                document.getElementById('vizStart').disabled = false;
+                document.getElementById('vizStop').disabled = true;
+                updateVizStatus();
+            }
+        });
+
+        document.getElementById('vizCleanup').addEventListener('click', () => {
+            if (vizEngine) {
+                vizEngine.cleanup();
+                log('Visualization cleaned up', 'info');
+                document.getElementById('vizInit').disabled = false;
+                document.getElementById('vizStart').disabled = true;
+                document.getElementById('vizStop').disabled = true;
+                document.getElementById('vizCleanup').disabled = true;
+                document.getElementById('arousalSlider').disabled = true;
+                document.getElementById('focusSlider').disabled = true;
+                document.getElementById('vizSessionToggle').disabled = true;
+            }
+        });
+
+        document.getElementById('arousalSlider').addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            document.getElementById('arousalValue').textContent = value.toFixed(1);
+            if (vizEngine) {
+                vizEngine.updateCognitiveState({ arousal: value });
+                log(`Arousal set to ${value.toFixed(1)}`, 'info');
+            }
+        });
+
+        document.getElementById('focusSlider').addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            document.getElementById('focusValue').textContent = value.toFixed(1);
+            if (vizEngine) {
+                vizEngine.updateCognitiveState({ focus: value });
+                log(`Focus set to ${value.toFixed(1)}`, 'info');
+            }
+        });
+
+        document.getElementById('vizSessionToggle').addEventListener('click', () => {
+            if (vizEngine) {
+                const newState = !vizEngine.sessionActive;
+                vizEngine.setSessionActive(newState);
+                log(`Session active: ${newState}`, 'info');
+                updateVizStatus();
+            }
+        });
+
+        function updateVizStatus() {
+            if (vizEngine) {
+                const state = vizEngine.getState();
+                document.getElementById('vizRunning').textContent = state.isRunning ? 'Yes' : 'No';
+                document.getElementById('vizSession').textContent = state.sessionActive ? 'Yes' : 'No';
+                document.getElementById('vizParticles').textContent = state.sessionActive ? '100' : '50';
+            }
+        }
+
+        // Session Manager Controls
+        document.getElementById('sessionStart').addEventListener('click', () => {
+            sessionManager = new SessionManager();
+            sessionManager.startSession(30);
+            log('Session started (30 seconds)', 'success');
+            document.getElementById('sessionStart').disabled = true;
+            document.getElementById('sessionPause').disabled = false;
+            document.getElementById('sessionStop').disabled = false;
+            document.getElementById('sessionNextPhase').disabled = false;
+            document.getElementById('sessionSave').disabled = false;
+            startSessionUpdates();
+        });
+
+        document.getElementById('sessionPause').addEventListener('click', () => {
+            if (sessionManager) {
+                sessionManager.pauseSession();
+                log('Session paused', 'warning');
+                document.getElementById('sessionPause').disabled = true;
+                document.getElementById('sessionResume').disabled = false;
+            }
+        });
+
+        document.getElementById('sessionResume').addEventListener('click', () => {
+            if (sessionManager) {
+                sessionManager.resumeSession();
+                log('Session resumed', 'success');
+                document.getElementById('sessionPause').disabled = false;
+                document.getElementById('sessionResume').disabled = true;
+            }
+        });
+
+        document.getElementById('sessionStop').addEventListener('click', () => {
+            if (sessionManager) {
+                sessionManager.stopSession();
+                log('Session stopped', 'info');
+                resetSessionButtons();
+                stopSessionUpdates();
+            }
+        });
+
+        document.getElementById('sessionNextPhase').addEventListener('click', () => {
+            if (sessionManager) {
+                const phase = sessionManager.nextPhase();
+                if (phase) {
+                    log(`Advanced to phase: ${phase.name}`, 'success');
+                } else {
+                    log('All phases complete', 'info');
+                }
+                updateSessionStatus();
+            }
+        });
+
+        document.getElementById('sessionSave').addEventListener('click', () => {
+            if (sessionManager) {
+                const success = sessionManager.saveState();
+                if (success) {
+                    log('Session state saved to localStorage', 'success');
+                } else {
+                    log('Failed to save session state', 'error');
+                }
+            }
+        });
+
+        document.getElementById('sessionLoad').addEventListener('click', () => {
+            sessionManager = new SessionManager();
+            const success = sessionManager.loadState();
+            if (success) {
+                log('Session state loaded from localStorage', 'success');
+                document.getElementById('sessionStart').disabled = true;
+                document.getElementById('sessionPause').disabled = false;
+                document.getElementById('sessionStop').disabled = false;
+                document.getElementById('sessionNextPhase').disabled = false;
+                document.getElementById('sessionSave').disabled = false;
+                startSessionUpdates();
+            } else {
+                log('No saved session state found', 'warning');
+            }
+        });
+
+        document.getElementById('sessionClear').addEventListener('click', () => {
+            if (!sessionManager) {
+                sessionManager = new SessionManager();
+            }
+            sessionManager.clearState();
+            log('Saved session state cleared', 'info');
+        });
+
+        function resetSessionButtons() {
+            document.getElementById('sessionStart').disabled = false;
+            document.getElementById('sessionPause').disabled = true;
+            document.getElementById('sessionResume').disabled = true;
+            document.getElementById('sessionStop').disabled = true;
+            document.getElementById('sessionNextPhase').disabled = true;
+            document.getElementById('sessionSave').disabled = true;
+        }
+
+        function startSessionUpdates() {
+            updateInterval = setInterval(updateSessionStatus, 100);
+        }
+
+        function stopSessionUpdates() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        function updateSessionStatus() {
+            if (sessionManager) {
+                const state = sessionManager.getState();
+                document.getElementById('sessionActive').textContent = state.sessionActive ? 'Yes' : 'No';
+                document.getElementById('sessionPaused').textContent = state.sessionPaused ? 'Yes' : 'No';
+                document.getElementById('sessionPhase').textContent = state.currentPhase ? state.currentPhase.name : 'None';
+                document.getElementById('sessionPhaseProgress').textContent = `${(state.phaseProgress * 100).toFixed(1)}%`;
+                document.getElementById('sessionProgress').textContent = `${(state.sessionProgress * 100).toFixed(1)}%`;
+                document.getElementById('sessionBeatFreq').textContent = `${state.beatFrequency.toFixed(2)} Hz`;
+            }
+        }
+
+        // Initial log
+        log('Test harness initialized. Ready for module testing.', 'success');
+    </script>
+</body>
+</html>
