@@ -53,6 +53,12 @@ redis-server
 docker run -d -p 6379:6379 redis:7-alpine
 ```
 
+Tip (Windows): If you don't use Docker, you can either:
+- Run Redis in WSL: `wsl --install` then `sudo apt install redis-server && sudo service redis-server start`.
+- Or install a native Windows-compatible Redis distribution (e.g., a developer edition) and start it as a service.
+
+Set `REDIS_URL=redis://127.0.0.1:6379` (or `REDIS_HOST=127.0.0.1` and `REDIS_PORT=6379`) for best results on Windows. You can also set `DISABLE_REDIS=true` to force the in-memory cache during local development.
+
 ### Development
 
 ```bash
@@ -103,6 +109,9 @@ DATABASE_URL=postgresql://user:pass@localhost:5432/neural_entrainment
 
 # Redis
 REDIS_URL=redis://localhost:6379
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+DISABLE_REDIS=false
 
 # JWT
 JWT_SECRET=your-secret-key
