@@ -25,11 +25,20 @@ Backend API server for CrisisCore Neural Interface v3.0
 npm install
 ```
 
-2. **Set up environment:**
+2. **Set up environment (automated):**
+```bash
+./setup.sh
+```
+
+Or manually:
 ```bash
 cp .env.example .env
-# Edit .env with your database credentials
+# Edit .env with your database credentials and CORS settings
 ```
+
+**Important:** The `.env` file includes CORS configuration. For production deployments, ensure `CORS_ORIGIN` includes all frontend URLs that need to access the API:
+- `http://localhost:5173` for local development
+- `https://crisiscore-systems.github.io` for GitHub Pages deployment
 
 3. **Create database:**
 ```bash
@@ -151,6 +160,39 @@ backend/
 - ✅ Rate limiting (100 req/15min)
 - ✅ Request validation with Zod
 - ✅ Medical disclaimer enforcement
+
+## Troubleshooting
+
+### CORS Errors
+
+If you see CORS errors like:
+```
+Access to fetch at 'http://localhost:3001/api/auth/login' from origin 'https://crisiscore-systems.github.io' 
+has been blocked by CORS policy: Response to preflight request doesn't pass access control check
+```
+
+**Solution:**
+1. Ensure you have a `.env` file in the backend directory (copy from `.env.example`)
+2. Verify the `CORS_ORIGIN` environment variable includes all required origins:
+   ```env
+   CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
+   ```
+3. Restart the backend server after making changes to `.env`
+4. For production deployments, make sure your hosting provider has the correct `CORS_ORIGIN` environment variable set
+
+### Database Connection Issues
+
+If the server fails to start with database errors:
+1. Ensure PostgreSQL is running
+2. Verify database credentials in `.env`
+3. Check that the database exists: `psql -l | grep neural_entrainment`
+
+### Redis Connection Issues
+
+If you see Redis connection errors:
+1. Ensure Redis is running: `redis-cli ping` (should return `PONG`)
+2. Verify Redis URL in `.env`
+3. Or start Redis with Docker: `docker run -d -p 6379:6379 redis:7-alpine`
 
 ## Next Steps
 - [ ] WebSocket support for real-time session updates
