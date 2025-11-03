@@ -50,7 +50,7 @@ const inMemoryCache = {
 
 const redisPlugin: FastifyPluginAsync = async (fastify) => {
   // Always use in-memory cache for now (Redis optional)
-  fastify.log.info('✅ Using in-memory cache (Redis disabled)');
+  fastify.log.info('Using in-memory cache (Redis disabled)');
   fastify.decorate('redis', inMemoryCache);
 };
 

@@ -23,7 +23,8 @@ CORS_ORIGIN=$CorsOrigins
 JWT_SECRET=dev-secret-change-me
 
 # Postgres (adjust as needed)
-DB_HOST=localhost
+# Use 127.0.0.1 to avoid IPv6 (::1) auth differences on Windows
+DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_NAME=neural_entrainment
 DB_USER=postgres
