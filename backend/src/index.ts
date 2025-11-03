@@ -99,7 +99,7 @@ async function start() {
 
     fastify.log.info(`🚀 Server listening at ${address}`);
     fastify.log.info(`📊 Environment: ${config.env}`);
-    fastify.log.info(`🔒 CORS origin: ${config.cors.origin}`);
+    fastify.log.info(`🔒 CORS origins: ${Array.isArray(config.cors.origin) ? config.cors.origin.join(', ') : config.cors.origin}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
