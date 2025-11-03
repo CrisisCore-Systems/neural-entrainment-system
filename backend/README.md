@@ -29,6 +29,9 @@ npm install
 ```bash
 cp .env.example .env
 # Edit .env with your database credentials
+# Also set CORS_ORIGIN to include allowed origins (comma-separated)
+# Example:
+# CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
 ```
 
 3. **Create database:**
@@ -107,6 +110,20 @@ JWT_EXPIRES_IN=7d
 
 # CORS
 CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
+```
+
+Tip: You can set multiple CORS origins by comma-separating them:
+
+```env
+CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
+```
+
+### Windows quick setup (PowerShell)
+
+```powershell
+cd backend
+./setup.ps1 -Port 3001 -CorsOrigins "http://localhost:5173,https://crisiscore-systems.github.io"
+npm run dev
 ```
 
 ## Database Schema

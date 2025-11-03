@@ -31,8 +31,10 @@ export const config = {
   },
 
   cors: {
+    // Support multiple origins via comma-separated list in CORS_ORIGIN
+    // Example: CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
     origin: process.env.CORS_ORIGIN 
-      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim()).filter(Boolean)
       : ['http://localhost:5173'],
   },
 
