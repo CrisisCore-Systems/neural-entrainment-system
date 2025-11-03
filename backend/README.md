@@ -106,7 +106,7 @@ JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
 
 # CORS
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
 ```
 
 ## Database Schema
