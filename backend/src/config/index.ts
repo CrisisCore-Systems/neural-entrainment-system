@@ -50,5 +50,7 @@ export const config = {
   features: {
     // When true, skip connecting to PostgreSQL (dev-only convenience)
     disableDatabase: process.env.DISABLE_DATABASE === 'true',
+    // When true, skip connecting to Redis and use in-memory cache
+    disableRedis: process.env.DISABLE_REDIS === 'true',
   },
 } as const;
