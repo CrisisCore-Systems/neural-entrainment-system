@@ -46,4 +46,9 @@ export const config = {
   logging: {
     level: process.env.LOG_LEVEL || 'info',
   },
+
+  features: {
+    // When true, skip connecting to PostgreSQL (dev-only convenience)
+    disableDatabase: process.env.DISABLE_DATABASE === 'true',
+  },
 } as const;

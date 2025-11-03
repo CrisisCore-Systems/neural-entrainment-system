@@ -55,7 +55,11 @@ async function registerPlugins() {
   await fastify.register(websocket);
 
   // Database connection
-  await fastify.register(dbPlugin);
+  if (!config.features.disableDatabase) {
+    await fastify.register(dbPlugin);
+  } else {
+    fastify.log.warn('Database disabled via DISABLE_DATABASE=true (dev mode)');
+  }
 
   // Redis connection
   await fastify.register(redisPlugin);
