@@ -1,0 +1,23 @@
+# Railway Configuration for Neural Entrainment Backend
+# See: https://docs.railway.app/deploy/config-as-code
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm install && npm run build"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+# Environment variables (set in Railway dashboard)
+# Required variables:
+# - NODE_ENV=production
+# - PORT=3001
+# - DATABASE_URL (auto-set by Railway PostgreSQL plugin)
+# - REDIS_URL (auto-set by Railway Redis plugin)
+# - JWT_SECRET (generate with: openssl rand -base64 32)
+# - JWT_EXPIRES_IN=7d
+# - CORS_ORIGIN=https://crisiscore-systems.github.io
