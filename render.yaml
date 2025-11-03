@@ -1,0 +1,40 @@
+# Render.com Blueprint for Neural Entrainment System
+# See: https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API Service
+  - type: web
+    name: neural-entrainment-backend
+    runtime: node
+    region: oregon  # Choose: oregon, frankfurt, singapore, ohio
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        sync: false  # Set manually in Render dashboard (use Neon or Railway)
+      - key: REDIS_URL
+        sync: false  # Set manually in Render dashboard (use Upstash)
+      - key: JWT_SECRET
+        generateValue: true  # Render will auto-generate a secure secret
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: https://crisiscore-systems.github.io
+
+# Note: Render free tier does NOT include PostgreSQL or Redis
+# You must use external services:
+# - PostgreSQL: Neon (neon.tech), Supabase, or Railway
+# - Redis: Upstash (upstash.com) or Railway
+#
+# To deploy:
+# 1. Create account at render.com
+# 2. Connect GitHub repository
+# 3. Render will auto-detect this file
+# 4. Set DATABASE_URL and REDIS_URL manually in dashboard

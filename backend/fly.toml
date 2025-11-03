@@ -1,0 +1,67 @@
+# Fly.io Configuration for Neural Entrainment Backend
+# See: https://fly.io/docs/reference/configuration/
+
+app = "neural-entrainment-backend"  # Change to your unique app name
+primary_region = "sjc"  # Change to: sjc (San Jose), iad (Virginia), lhr (London), etc.
+
+# Build configuration
+[build]
+  # Use Dockerfile or buildpacks
+  builder = "heroku/buildpacks:20"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "8080"
+  # Note: DATABASE_URL and REDIS_URL are set via fly secrets
+  # JWT_SECRET is set via fly secrets
+  # CORS_ORIGIN is set via fly secrets
+
+# HTTP service configuration
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true  # Free tier: auto-stop when idle
+  auto_start_machines = true  # Auto-start on request
+  min_machines_running = 0    # Save resources on free tier
+
+# Network services
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  # HTTP port (redirects to HTTPS)
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  # HTTPS port
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+# Health checks
+[checks]
+  [checks.alive]
+    grace_period = "30s"
+    interval = "15s"
+    method = "GET"
+    path = "/health"
+    timeout = "10s"
+    type = "http"
+
+# Resource limits (free tier)
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+
+# Deploy instructions:
+# 1. Install Fly CLI: curl -L https://fly.io/install.sh | sh
+# 2. Login: fly auth login
+# 3. From backend directory: fly launch
+# 4. Create PostgreSQL: fly postgres create
+# 5. Create Redis: fly redis create
+# 6. Set secrets:
+#    fly secrets set JWT_SECRET=$(openssl rand -base64 32)
+#    fly secrets set CORS_ORIGIN=https://crisiscore-systems.github.io
+# 7. Deploy: fly deploy

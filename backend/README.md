@@ -2,6 +2,16 @@
 
 Backend API server for CrisisCore Neural Interface v3.0
 
+## 🚀 Free Hosting
+
+Looking to deploy? Check out our **[Free Deployment Guide](../DEPLOYMENT.md)** for step-by-step instructions on deploying to:
+- Railway (recommended - easiest setup)
+- Render (best for 24/7 uptime)
+- Fly.io (global distribution)
+- Supabase (all-in-one solution)
+
+See **[Hosting Comparison](../HOSTING_COMPARISON.md)** for platform comparison.
+
 ## Tech Stack
 - **Node.js 20+** with TypeScript
 - **Fastify** - High-performance web framework
