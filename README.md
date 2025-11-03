@@ -4,7 +4,14 @@ A web-based neural entrainment application that uses binaural beats and visual p
 
 ## 🚀 Quick Links
 
-- **[Free Deployment Guide](./DEPLOYMENT.md)** - Deploy to free hosting platforms (Railway, Render, Fly.io)
+### 📖 Deployment Documentation
+- **[🎯 Quick Start Guide](./QUICKSTART.md)** - One-page deployment cheat sheet
+- **[📘 Full Deployment Guide](./DEPLOYMENT.md)** - Comprehensive step-by-step instructions
+- **[📊 Platform Comparison](./HOSTING_COMPARISON.md)** - Compare Railway vs Render vs Fly.io
+- **[🏗️ Architecture Overview](./ARCHITECTURE.md)** - Visual deployment architecture
+- **[🔧 Troubleshooting](./TROUBLESHOOTING.md)** - Common issues and solutions
+
+### 💻 Development Documentation
 - **[Backend Documentation](./backend/README.md)** - API and backend setup
 - **[Frontend Documentation](./frontend/README.md)** - UI and frontend development
 - **[Technology Stack](./App_techstack.md)** - Complete tech stack overview
