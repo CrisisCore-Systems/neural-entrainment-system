@@ -124,6 +124,48 @@ cd backend
 
 See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for complete step-by-step instructions for each platform.
 
+#### Render + Neon quick env
+
+- Copy-ready env for Render: `docs/RENDER_ENV.example.env` (KEY=VALUE) or `docs/RENDER_ENV.example.json` (JSON)
+- Set `DATABASE_URL` from Neon and `REDIS_URL` from Upstash (optional)
+- Then update `frontend/.env.production` with your Render URL: `VITE_API_URL=https://<service>.onrender.com/api`
+
+### Deploy on Render + Neon (Free)
+
+Follow these steps to deploy the backend on Render and use Neon for PostgreSQL:
+
+1. Create a Neon project → copy the connection string:
+	`postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require`
+2. In Neon → SQL Editor, initialize schema:
+	```bash
+	psql "postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require" -f backend/database/schema.sql
+	```
+3. Create a Render account → New → Web Service → Connect this GitHub repo
+	- Root Directory: `backend`
+	- Build Command: `npm install && npm run build`
+	- Start Command: `npm start`
+	- Health Check Path: `/health`
+4. In Render → Environment, set variables (see also `docs/RENDER_ENV.example.env`):
+	```env
+	NODE_ENV=production
+	PORT=3001
+	DATABASE_URL=postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require
+	# Optional Redis (or set DISABLE_REDIS=true in backend/.env for local dev)
+	REDIS_URL=redis://default:<pass>@<host>:6379
+	JWT_SECRET=<generate-64+ random chars>
+	JWT_EXPIRES_IN=7d
+	CORS_ORIGIN=https://crisiscore-systems.github.io,http://localhost:5173
+	```
+5. Deploy. Copy your Render URL, e.g. `https://neural-entrainment-backend.onrender.com`.
+6. Frontend: set production API URL in `frontend/.env.production`:
+	```env
+	VITE_API_URL=https://neural-entrainment-backend.onrender.com/api
+	```
+7. Test health endpoint:
+	```bash
+	curl https://neural-entrainment-backend.onrender.com/health
+	```
+
 ## 🛠️ Technology Stack
 
 ### Frontend

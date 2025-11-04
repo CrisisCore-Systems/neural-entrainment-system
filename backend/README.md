@@ -145,6 +145,20 @@ cd backend
 npm run dev
 ```
 
+## Neon (Postgres) Setup
+
+If you're using Neon as your free PostgreSQL, follow these quick steps:
+
+1. Create a Neon project and an app role (e.g., `app_user`) with a strong password.
+2. Copy the direct connection string (psql URI):
+	`postgresql://app_user:<password>@<host>/<db>?sslmode=require`
+3. Initialize the schema using the SQL editor in Neon or locally with psql:
+	```bash
+	psql "postgresql://app_user:<password>@<host>/<db>?sslmode=require" -f backend/database/schema.sql
+	```
+4. Set the connection string as `DATABASE_URL` on your hosting platform (Render, Railway, etc.).
+	Never expose this in the frontend; keep it server-side only.
+
 ## Database Schema
 
 ### Tables
