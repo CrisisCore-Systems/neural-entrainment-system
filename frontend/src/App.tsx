@@ -108,13 +108,16 @@ function App() {
       {view === 'gateway' && (
         <GatewayDashboard 
           onExit={() => {
-            console.log('Gateway Exit');
+            console.log('[App] Gateway Exit button clicked');
             setView('protocols');
+            console.log('[App] View changed to: protocols');
           }}
           onStartSession={(protocolId) => {
-            console.log('Starting Gateway Session:', protocolId);
+            console.log('[App] Gateway onStartSession called with protocolId:', protocolId);
             setSelectedGatewayProtocol(protocolId);
+            console.log('[App] selectedGatewayProtocol set to:', protocolId);
             setView('gateway-session');
+            console.log('[App] View changed to: gateway-session');
           }}
         />
       )}
@@ -122,8 +125,10 @@ function App() {
         <GatewaySession 
           protocolId={selectedGatewayProtocol}
           onExit={() => {
+            console.log('[App] Gateway Session Exit button clicked');
             setSelectedGatewayProtocol(null);
             setView('gateway');
+            console.log('[App] View changed back to: gateway');
           }}
         />
       )}

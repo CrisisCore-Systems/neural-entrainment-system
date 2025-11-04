@@ -28,10 +28,24 @@ interface GatewayDashboardProps {
 
 export default function GatewayDashboard({ onExit, onStartSession }: GatewayDashboardProps) {
   const { user } = useAuthStore();
+  
+  // Compute initial gateway level
+  const getInitialGatewayLevel = () => {
+    if (!user) return 0;
+    const hasAccess = user.gatewayAccess;
+    const currentLevel = user.gatewayLevel || 0;
+    
+    // If user has gateway access but no level set, unlock Focus 10 by default
+    if (hasAccess && currentLevel === 0) {
+      return 10;
+    }
+    return currentLevel;
+  };
+  
   const [profile, setProfile] = useState<UserGatewayProfile>({
     userId: 0,
     gatewayAccess: user?.gatewayAccess || false,
-    gatewayLevel: user?.gatewayLevel || 0,
+    gatewayLevel: getInitialGatewayLevel(),
     totalSessions: user?.totalStandardSessions || 0,
     gatewaySessions: [
       {
@@ -73,8 +87,14 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
     if (user) {
       // Handle both camelCase and snake_case from backend
       const gatewayAccess = (user as any).gateway_access || user.gatewayAccess || false;
-      const gatewayLevel = (user as any).gateway_level || user.gatewayLevel || 0;
+      let gatewayLevel = (user as any).gateway_level || user.gatewayLevel || 0;
       const totalSessions = (user as any).total_standard_sessions || user.totalStandardSessions || 0;
+      
+      // If user has gateway access but no level set, unlock Focus 10 by default
+      if (gatewayAccess && gatewayLevel === 0) {
+        console.log('Gateway Access granted but level is 0, defaulting to level 10 (Focus 10 unlocked)');
+        gatewayLevel = 10;
+      }
       
       console.log('Gateway Access:', gatewayAccess);
       console.log('Gateway Level:', gatewayLevel);
@@ -144,7 +164,15 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
         className={`gateway-protocol-card ${!isUnlocked ? 'locked' : ''} ${
           selectedProtocol === protocolKey ? 'selected' : ''
         }`}
-        onClick={() => isUnlocked && setSelectedProtocol(protocolKey)}
+        onClick={() => {
+          if (isUnlocked) {
+            console.log('[GatewayDashboard] Protocol card clicked:', protocolKey);
+            setSelectedProtocol(protocolKey);
+            console.log('[GatewayDashboard] Protocol selected:', protocolKey);
+          } else {
+            console.log('[GatewayDashboard] Protocol locked, cannot select:', protocolKey);
+          }
+        }}
       >
         <div className="protocol-header">
           <div className="focus-badge" style={{ 
@@ -196,12 +224,15 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
             className="btn-begin-session"
             onClick={(e) => {
               e.stopPropagation();
-              console.log('Begin Session clicked for:', protocolKey);
-              console.log('onStartSession exists:', !!onStartSession);
+              console.log('[GatewayDashboard] Begin Session clicked for protocol:', protocolKey);
+              console.log('[GatewayDashboard] Protocol details:', protocol);
+              console.log('[GatewayDashboard] onStartSession handler exists:', !!onStartSession);
               if (onStartSession) {
+                console.log('[GatewayDashboard] Calling onStartSession...');
                 onStartSession(protocolKey);
               } else {
-                alert('Navigation handler not configured. Check console.');
+                console.error('[GatewayDashboard] onStartSession is not defined!');
+                alert('Navigation handler not configured. Check console for details.');
               }
             }}
           >
