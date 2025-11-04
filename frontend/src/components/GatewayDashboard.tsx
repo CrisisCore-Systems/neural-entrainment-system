@@ -31,7 +31,7 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
   const [profile, setProfile] = useState<UserGatewayProfile>({
     userId: 0,
     gatewayAccess: user?.gatewayAccess || false,
-    gatewayLevel: user?.gatewayLevel || 0,
+    gatewayLevel: (user?.gatewayAccess && (user?.gatewayLevel === 0 || !user?.gatewayLevel)) ? 10 : (user?.gatewayLevel || 0),
     totalSessions: user?.totalStandardSessions || 0,
     gatewaySessions: [
       {
@@ -73,8 +73,14 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
     if (user) {
       // Handle both camelCase and snake_case from backend
       const gatewayAccess = (user as any).gateway_access || user.gatewayAccess || false;
-      const gatewayLevel = (user as any).gateway_level || user.gatewayLevel || 0;
+      let gatewayLevel = (user as any).gateway_level || user.gatewayLevel || 0;
       const totalSessions = (user as any).total_standard_sessions || user.totalStandardSessions || 0;
+      
+      // If user has gateway access but no level set, unlock Focus 10 by default
+      if (gatewayAccess && gatewayLevel === 0) {
+        console.log('Gateway Access granted but level is 0, defaulting to level 10 (Focus 10 unlocked)');
+        gatewayLevel = 10;
+      }
       
       console.log('Gateway Access:', gatewayAccess);
       console.log('Gateway Level:', gatewayLevel);
