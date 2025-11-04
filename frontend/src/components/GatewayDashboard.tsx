@@ -144,7 +144,15 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
         className={`gateway-protocol-card ${!isUnlocked ? 'locked' : ''} ${
           selectedProtocol === protocolKey ? 'selected' : ''
         }`}
-        onClick={() => isUnlocked && setSelectedProtocol(protocolKey)}
+        onClick={() => {
+          if (isUnlocked) {
+            console.log('[GatewayDashboard] Protocol card clicked:', protocolKey);
+            setSelectedProtocol(protocolKey);
+            console.log('[GatewayDashboard] Protocol selected:', protocolKey);
+          } else {
+            console.log('[GatewayDashboard] Protocol locked, cannot select:', protocolKey);
+          }
+        }}
       >
         <div className="protocol-header">
           <div className="focus-badge" style={{ 
@@ -196,12 +204,15 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
             className="btn-begin-session"
             onClick={(e) => {
               e.stopPropagation();
-              console.log('Begin Session clicked for:', protocolKey);
-              console.log('onStartSession exists:', !!onStartSession);
+              console.log('[GatewayDashboard] Begin Session clicked for protocol:', protocolKey);
+              console.log('[GatewayDashboard] Protocol details:', protocol);
+              console.log('[GatewayDashboard] onStartSession handler exists:', !!onStartSession);
               if (onStartSession) {
+                console.log('[GatewayDashboard] Calling onStartSession...');
                 onStartSession(protocolKey);
               } else {
-                alert('Navigation handler not configured. Check console.');
+                console.error('[GatewayDashboard] onStartSession is not defined!');
+                alert('Navigation handler not configured. Check console for details.');
               }
             }}
           >
