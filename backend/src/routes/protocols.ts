@@ -10,7 +10,7 @@ export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
    * GET /api/protocols
    * Get all public protocols
    */
-  fastify.get('/', async (request, reply) => {
+  fastify.get('/', async (_request, reply) => {
     try {
       fastify.log.info('Fetching protocols...');
       
@@ -30,7 +30,7 @@ export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
       fastify.log.info(`Found ${result.rows.length} protocols`);
       return reply.send({ protocols: result.rows });
     } catch (error) {
-      fastify.log.error('Get protocols error:', error);
+      fastify.log.error(error, 'Get protocols error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return reply.code(500).send({ 
         error: 'Internal server error',
@@ -58,7 +58,7 @@ export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ protocol: result.rows[0] });
     } catch (error) {
-      fastify.log.error('Get protocol error:', error);
+      fastify.log.error(error, 'Get protocol error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });

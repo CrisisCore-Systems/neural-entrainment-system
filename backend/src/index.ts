@@ -21,7 +21,7 @@ import { userRoutes } from './routes/users.js';
 
 // Initialize Fastify with logger
 const fastify = Fastify({
-  logger: logger,
+  logger: logger as any,
   trustProxy: true,
 });
 
@@ -123,7 +123,7 @@ async function gracefulShutdown(signal: string) {
     fastify.log.info('Server closed successfully');
     process.exit(0);
   } catch (err) {
-    fastify.log.error('Error during shutdown:', err);
+    fastify.log.error(err, 'Error during shutdown');
     process.exit(1);
   }
 }

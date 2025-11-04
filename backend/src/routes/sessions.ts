@@ -28,7 +28,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ sessions: result.rows });
     } catch (error) {
-      fastify.log.error('Get sessions error:', error);
+      fastify.log.error(error, 'Get sessions error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });
@@ -62,7 +62,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.code(201).send({ session });
     } catch (error) {
-      fastify.log.error('Create session error:', error);
+      fastify.log.error(error, 'Create session error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });
@@ -136,7 +136,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ session });
     } catch (error) {
-      fastify.log.error('Update session error:', error);
+      fastify.log.error(error, 'Update session error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return reply.code(500).send({ 
         error: 'Internal server error',
@@ -184,7 +184,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send(stats);
     } catch (error) {
-      fastify.log.error('Get stats error:', error);
+      fastify.log.error(error, 'Get stats error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });
