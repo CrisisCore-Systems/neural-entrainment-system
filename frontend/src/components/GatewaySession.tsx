@@ -115,7 +115,11 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
   };
 
   // Note: Auto-start removed to comply with browser autoplay policies.
-  // User must explicitly click "Begin Gateway Session" button to start.
+  // Previously attempted to start audio automatically on component mount, but this:
+  // 1. Violates browser autoplay policies (requires user gesture)
+  // 2. Failed silently in most browsers, leaving UI in inconsistent state
+  // 3. Made debugging difficult as errors were swallowed with `silent: true`
+  // User must now explicitly click "Begin Gateway Session" button to start.
 
   const startPhase = (phaseIndex: number) => {
     if (!protocol) {

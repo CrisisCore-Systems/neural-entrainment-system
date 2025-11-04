@@ -28,10 +28,24 @@ interface GatewayDashboardProps {
 
 export default function GatewayDashboard({ onExit, onStartSession }: GatewayDashboardProps) {
   const { user } = useAuthStore();
+  
+  // Compute initial gateway level
+  const getInitialGatewayLevel = () => {
+    if (!user) return 0;
+    const hasAccess = user.gatewayAccess;
+    const currentLevel = user.gatewayLevel || 0;
+    
+    // If user has gateway access but no level set, unlock Focus 10 by default
+    if (hasAccess && currentLevel === 0) {
+      return 10;
+    }
+    return currentLevel;
+  };
+  
   const [profile, setProfile] = useState<UserGatewayProfile>({
     userId: 0,
     gatewayAccess: user?.gatewayAccess || false,
-    gatewayLevel: (user?.gatewayAccess && (user?.gatewayLevel === 0 || !user?.gatewayLevel)) ? 10 : (user?.gatewayLevel || 0),
+    gatewayLevel: getInitialGatewayLevel(),
     totalSessions: user?.totalStandardSessions || 0,
     gatewaySessions: [
       {
