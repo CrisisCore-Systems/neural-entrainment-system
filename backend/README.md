@@ -2,6 +2,16 @@
 
 Backend API server for CrisisCore Neural Interface v3.0
 
+## 🚀 Free Hosting
+
+Looking to deploy? Check out our **[Free Deployment Guide](../DEPLOYMENT.md)** for step-by-step instructions on deploying to:
+- Railway (recommended - easiest setup)
+- Render (best for 24/7 uptime)
+- Fly.io (global distribution)
+- Supabase (all-in-one solution)
+
+See **[Hosting Comparison](../HOSTING_COMPARISON.md)** for platform comparison.
+
 ## Tech Stack
 - **Node.js 20+** with TypeScript
 - **Fastify** - High-performance web framework
@@ -33,7 +43,10 @@ npm install
 Or manually:
 ```bash
 cp .env.example .env
-# Edit .env with your database credentials and CORS settings
+# Edit .env with your database credentials
+# Also set CORS_ORIGIN to include allowed origins (comma-separated)
+# Example:
+# CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
 ```
 
 **Important:** The `.env` file includes CORS configuration. For production deployments, ensure `CORS_ORIGIN` includes all frontend URLs that need to access the API:
@@ -58,6 +71,12 @@ redis-server
 # Or use Docker
 docker run -d -p 6379:6379 redis:7-alpine
 ```
+
+Tip (Windows): If you don't use Docker, you can either:
+- Run Redis in WSL: `wsl --install` then `sudo apt install redis-server && sudo service redis-server start`.
+- Or install a native Windows-compatible Redis distribution (e.g., a developer edition) and start it as a service.
+
+Set `REDIS_URL=redis://127.0.0.1:6379` (or `REDIS_HOST=127.0.0.1` and `REDIS_PORT=6379`) for best results on Windows. You can also set `DISABLE_REDIS=true` to force the in-memory cache during local development.
 
 ### Development
 
@@ -109,6 +128,9 @@ DATABASE_URL=postgresql://user:pass@localhost:5432/neural_entrainment
 
 # Redis
 REDIS_URL=redis://localhost:6379
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+DISABLE_REDIS=false
 
 # JWT
 JWT_SECRET=your-secret-key
@@ -117,6 +139,34 @@ JWT_EXPIRES_IN=7d
 # CORS
 CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
 ```
+
+Tip: You can set multiple CORS origins by comma-separating them:
+
+```env
+CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
+```
+
+### Windows quick setup (PowerShell)
+
+```powershell
+cd backend
+./setup.ps1 -Port 3001 -CorsOrigins "http://localhost:5173,https://crisiscore-systems.github.io"
+npm run dev
+```
+
+## Neon (Postgres) Setup
+
+If you're using Neon as your free PostgreSQL, follow these quick steps:
+
+1. Create a Neon project and an app role (e.g., `app_user`) with a strong password.
+2. Copy the direct connection string (psql URI):
+	`postgresql://app_user:<password>@<host>/<db>?sslmode=require`
+3. Initialize the schema using the SQL editor in Neon or locally with psql:
+	```bash
+	psql "postgresql://app_user:<password>@<host>/<db>?sslmode=require" -f backend/database/schema.sql
+	```
+4. Set the connection string as `DATABASE_URL` on your hosting platform (Render, Railway, etc.).
+	Never expose this in the frontend; keep it server-side only.
 
 ## Database Schema
 

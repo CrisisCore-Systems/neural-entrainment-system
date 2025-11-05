@@ -16,9 +16,9 @@ const dbPlugin: FastifyPluginAsync = async (fastify) => {
   // Test connection
   try {
     await fastify.pg.query('SELECT NOW()');
-    fastify.log.info('✅ PostgreSQL connected successfully');
+    fastify.log.info('PostgreSQL connected successfully');
   } catch (error) {
-    fastify.log.error('❌ PostgreSQL connection failed:', error);
+    fastify.log.error(error, 'PostgreSQL connection failed');
     throw error;
   }
 };

@@ -27,7 +27,7 @@ export const userRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ preferences: result.rows[0] });
     } catch (error) {
-      fastify.log.error('Get preferences error:', error);
+      fastify.log.error(error, 'Get preferences error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });
@@ -55,7 +55,7 @@ export const userRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ message: 'Preferences updated successfully' });
     } catch (error) {
-      fastify.log.error('Update preferences error:', error);
+      fastify.log.error(error, 'Update preferences error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });

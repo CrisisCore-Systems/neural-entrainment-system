@@ -31,8 +31,10 @@ export const config = {
   },
 
   cors: {
+    // Support multiple origins via comma-separated list in CORS_ORIGIN
+    // Example: CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
     origin: process.env.CORS_ORIGIN 
-      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim()).filter(Boolean)
       : ['http://localhost:5173'],
   },
 
@@ -43,5 +45,12 @@ export const config = {
 
   logging: {
     level: process.env.LOG_LEVEL || 'info',
+  },
+
+  features: {
+    // When true, skip connecting to PostgreSQL (dev-only convenience)
+    disableDatabase: process.env.DISABLE_DATABASE === 'true',
+    // When true, skip connecting to Redis and use in-memory cache
+    disableRedis: process.env.DISABLE_REDIS === 'true',
   },
 } as const;

@@ -21,7 +21,7 @@ import { userRoutes } from './routes/users.js';
 
 // Initialize Fastify with logger
 const fastify = Fastify({
-  logger: logger,
+  logger: logger as any,
   trustProxy: true,
 });
 
@@ -55,7 +55,11 @@ async function registerPlugins() {
   await fastify.register(websocket);
 
   // Database connection
-  await fastify.register(dbPlugin);
+  if (!config.features.disableDatabase) {
+    await fastify.register(dbPlugin);
+  } else {
+    fastify.log.warn('Database disabled via DISABLE_DATABASE=true (dev mode)');
+  }
 
   // Redis connection
   await fastify.register(redisPlugin);
@@ -97,9 +101,12 @@ async function start() {
       host: '0.0.0.0',
     });
 
-    fastify.log.info(`🚀 Server listening at ${address}`);
-    fastify.log.info(`📊 Environment: ${config.env}`);
-    fastify.log.info(`🔒 CORS origins: ${Array.isArray(config.cors.origin) ? config.cors.origin.join(', ') : config.cors.origin}`);
+      fastify.log.info(`Server listening at ${address}`);
+      fastify.log.info(`Environment: ${config.env}`);
+      const allowedOrigins = Array.isArray(config.cors.origin)
+        ? (config.cors.origin as string[]).join(', ')
+        : (config.cors.origin as string);
+      fastify.log.info(`CORS origins: ${allowedOrigins}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
@@ -116,7 +123,7 @@ async function gracefulShutdown(signal: string) {
     fastify.log.info('Server closed successfully');
     process.exit(0);
   } catch (err) {
-    fastify.log.error('Error during shutdown:', err);
+    fastify.log.error(err, 'Error during shutdown');
     process.exit(1);
   }
 }

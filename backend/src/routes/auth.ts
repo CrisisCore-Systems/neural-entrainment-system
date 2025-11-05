@@ -111,7 +111,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
           details: error.errors,
         });
       }
-      fastify.log.error('Registration error:', error);
+      fastify.log.error(error, 'Registration error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return reply.code(500).send({ 
         error: 'Internal server error',
@@ -194,7 +194,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
           details: error.errors,
         });
       }
-      fastify.log.error('Login error:', error);
+      fastify.log.error(error, 'Login error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       return reply.code(500).send({ 
         error: 'Internal server error',
@@ -226,7 +226,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ user: result.rows[0] });
     } catch (error) {
-      fastify.log.error('Get user error:', error);
+      fastify.log.error(error, 'Get user error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });
@@ -246,7 +246,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({ message: 'Logged out successfully' });
     } catch (error) {
-      fastify.log.error('Logout error:', error);
+      fastify.log.error(error, 'Logout error');
       return reply.code(500).send({ error: 'Internal server error' });
     }
   });

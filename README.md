@@ -1,119 +1,268 @@
-# Neural Entrainment System
+# 🧠 CrisisCore Neural Entrainment System
 
-CrisisCore Neural Interface v3.0 - Advanced neural entrainment platform with real-time binaural beats, isochronic tones, and visual stimulation.
+A web-based neural entrainment application that uses binaural beats and visual patterns for meditation, focus, and relaxation.
 
-## Project Structure
+## 🚀 Quick Links
+
+### 📖 Deployment Documentation
+- **[🎯 Quick Start Guide](./QUICKSTART.md)** - One-page deployment cheat sheet
+- **[📘 Full Deployment Guide](./DEPLOYMENT.md)** - Comprehensive step-by-step instructions
+- **[📊 Platform Comparison](./HOSTING_COMPARISON.md)** - Compare Railway vs Render vs Fly.io
+- **[🏗️ Architecture Overview](./ARCHITECTURE.md)** - Visual deployment architecture
+- **[🔧 Troubleshooting](./TROUBLESHOOTING.md)** - Common issues and solutions
+
+### 💻 Development Documentation
+- **[Backend Documentation](./backend/README.md)** - API and backend setup
+- **[Frontend Documentation](./frontend/README.md)** - UI and frontend development
+- **[Technology Stack](./App_techstack.md)** - Complete tech stack overview
+
+## 📋 Project Structure
 
 ```
 neural-entrainment-system/
-├── frontend/          # React + Three.js frontend application
-├── backend/           # Fastify API server with PostgreSQL
-├── CORS_FIX_GUIDE.md # Guide to fix CORS errors
-└── docs/              # Additional documentation
+├── backend/              # Node.js + Fastify API server
+│   ├── src/             # Backend source code
+│   ├── database/        # PostgreSQL schema
+│   ├── Dockerfile       # Container configuration
+│   └── deploy-*.sh      # Deployment scripts
+├── frontend/            # React + Vite web application
+│   ├── src/             # Frontend source code
+│   └── public/          # Static assets
+├── DEPLOYMENT.md        # 🆓 Free hosting deployment guide
+├── render.yaml          # Render.com configuration
+└── README.md            # This file
 ```
 
-## Quick Start
+## 🎯 Features
 
-### Frontend (React + Three.js)
-```bash
-cd frontend
-npm install
-npm run dev
-```
+- **Binaural Beat Audio Generation**: Real-time synthesis with Web Audio API
+- **Visual Entrainment Patterns**: WebGL-powered synchronized visuals
+- **Session Tracking**: Monitor progress and effectiveness
+- **Multi-Protocol Support**: Pre-configured programs for various goals
+- **User Authentication**: Secure JWT-based auth system
+- **Real-time Analytics**: Track your neural entrainment journey
 
-See [frontend/README.md](frontend/README.md) for detailed instructions.
+## 🏃 Quick Start
 
-### Backend (Fastify API)
-```bash
-cd backend
-./setup.sh          # Create .env with correct CORS settings
-npm install
-npm run dev
-```
+### Local Development
 
-See [backend/README.md](backend/README.md) for detailed instructions.
-
-## Common Issues
-
-### ⚠️ CORS Errors
-
-If you see CORS errors when the GitHub Pages frontend tries to connect to your backend:
-
-```
-Access to fetch has been blocked by CORS policy
-```
-
-**Quick Fix:**
-1. Navigate to `backend/` directory
-2. Run `./setup.sh` to create `.env` file with correct CORS settings
-3. Restart your backend server
-
-**Detailed Guide:** See [CORS_FIX_GUIDE.md](CORS_FIX_GUIDE.md)
-
-## Architecture
-
-- **Frontend**: React 19 with Three.js for 3D visualizations, deployed to GitHub Pages
-- **Backend**: Fastify server with PostgreSQL and Redis, provides REST API
-- **Database**: PostgreSQL 14+ for user data and session tracking
-- **Cache**: Redis 7+ for session state and real-time metrics
-
-## Environment Variables
-
-### Backend
-```env
-CORS_ORIGIN=http://localhost:5173,https://crisiscore-systems.github.io
-DATABASE_URL=postgresql://user:pass@localhost:5432/neural_entrainment
-REDIS_URL=redis://localhost:6379
-JWT_SECRET=your-secret-key
-```
-
-### Frontend
-```env
-VITE_API_URL=http://localhost:3001
-```
-
-## Features
-
-- 🎵 **Advanced Audio Engine**: 6-phase neural entrainment protocols
-- 🎨 **Visual Stimulation**: WebGL-based 3D visualizations with Three.js
-- 👤 **User Management**: JWT authentication with medical screening
-- 📊 **Session Tracking**: Real-time metrics and progress monitoring
-- 🔒 **Security**: CORS protection, rate limiting, helmet security headers
-- 📱 **Responsive Design**: Works on desktop and mobile devices
-
-## Development
-
-### Prerequisites
+#### Prerequisites
 - Node.js 20+
 - PostgreSQL 14+
-- Redis 7+
+- Redis 7+ (optional, can be disabled)
 
-### Setup for Development
+#### 1. Clone Repository
+```bash
+git clone https://github.com/CrisisCore-Systems/neural-entrainment-system.git
+cd neural-entrainment-system
+```
 
-1. **Clone the repository**
-2. **Backend setup**: Follow [backend/README.md](backend/README.md)
-3. **Frontend setup**: Follow frontend instructions
-4. **Database**: Initialize with `backend/database/schema.sql`
+#### 2. Setup Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your settings
 
-### Deployment
+# Create database
+createdb neural_entrainment
+psql -d neural_entrainment -f database/schema.sql
 
-- **Frontend**: Automatically deploys to GitHub Pages via `.github/workflows/deploy-pages.yml`
-- **Backend**: Manual deployment to your preferred hosting service (requires setting environment variables)
+# Start backend
+npm run dev
+```
 
-## Documentation
+#### 3. Setup Frontend
+```bash
+cd ../frontend
+npm install
 
-- [App PRD](App_prd.md) - Product Requirements Document
-- [Tech Stack](App_techstack.md) - Technology stack overview  
-- [Dev Docs](App_devdocs.md) - Developer documentation
-- [Audio Engine](AUDIO_ENGINE_V2.md) - Audio engine architecture
-- [Gateway Process](GATEWAY_PROCESS.md) - Gateway implementation details
+# Start frontend
+npm run dev
+```
 
-## License
+Visit `http://localhost:5173` to see the application.
 
-MIT License - See LICENSE file for details
+### Docker Compose (Easiest)
 
-## Support
+```bash
+cd backend
+docker-compose up
+```
 
-For CORS configuration issues, see [CORS_FIX_GUIDE.md](CORS_FIX_GUIDE.md)
+This starts PostgreSQL, Redis, and the backend all at once!
 
-For other issues, check the backend and frontend README files or open an issue on GitHub.
+## 🆓 Deploy to Free Hosting
+
+We've prepared detailed guides for deploying to completely free hosting platforms:
+
+### Recommended: Railway (All-in-One)
+- ✅ $5/month free credit (enough for 24/7 operation)
+- ✅ PostgreSQL included
+- ✅ Redis included
+- ✅ Easiest setup
+
+```bash
+cd backend
+./deploy-railway.sh
+```
+
+Or on Windows:
+```powershell
+cd backend
+./deploy-railway.ps1
+```
+
+### Alternative Options
+
+| Platform | Database | Redis | Setup Time | Best For |
+|----------|----------|-------|------------|----------|
+| **Railway** | ✅ Included | ✅ Included | 10 min | Easiest |
+| **Render** | External | External | 20 min | Most reliable |
+| **Fly.io** | ✅ Included | ✅ Included | 15 min | Global |
+| **Supabase** | ✅ Included | ❌ | 25 min | Simple apps |
+
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for complete step-by-step instructions for each platform.
+
+#### Render + Neon quick env
+
+- Copy-ready env for Render: `docs/RENDER_ENV.example.env` (KEY=VALUE) or `docs/RENDER_ENV.example.json` (JSON)
+- Set `DATABASE_URL` from Neon and `REDIS_URL` from Upstash (optional)
+- Then update `frontend/.env.production` with your Render URL: `VITE_API_URL=https://<service>.onrender.com/api`
+
+### Deploy on Render + Neon (Free)
+
+Follow these steps to deploy the backend on Render and use Neon for PostgreSQL:
+
+1. Create a Neon project → copy the connection string:
+	`postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require`
+2. In Neon → SQL Editor, initialize schema:
+	```bash
+	psql "postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require" -f backend/database/schema.sql
+	```
+3. Create a Render account → New → Web Service → Connect this GitHub repo
+	- Root Directory: `backend`
+	- Build Command: `npm install && npm run build`
+	- Start Command: `npm start`
+	- Health Check Path: `/health`
+4. In Render → Environment, set variables (see also `docs/RENDER_ENV.example.env`):
+	```env
+	NODE_ENV=production
+	PORT=3001
+	DATABASE_URL=postgresql://<user>:<password>@<neon-host>/<db>?sslmode=require
+	# Optional Redis (or set DISABLE_REDIS=true in backend/.env for local dev)
+	REDIS_URL=redis://default:<pass>@<host>:6379
+	JWT_SECRET=<generate-64+ random chars>
+	JWT_EXPIRES_IN=7d
+	CORS_ORIGIN=https://crisiscore-systems.github.io,http://localhost:5173
+	```
+5. Deploy. Copy your Render URL, e.g. `https://neural-entrainment-backend.onrender.com`.
+6. Frontend: set production API URL in `frontend/.env.production`:
+	```env
+	VITE_API_URL=https://neural-entrainment-backend.onrender.com/api
+	```
+7. Test health endpoint:
+	```bash
+	curl https://neural-entrainment-backend.onrender.com/health
+	```
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Three.js** - WebGL visuals
+- **Zustand** - State management
+- **Tailwind CSS** - Styling
+
+### Backend
+- **Node.js 20** - Runtime
+- **Fastify** - Web framework
+- **PostgreSQL** - Database
+- **Redis** - Caching
+- **JWT** - Authentication
+- **TypeScript** - Type safety
+
+### Infrastructure
+- **GitHub Pages** - Frontend hosting (free)
+- **Railway/Render/Fly.io** - Backend hosting (free tier)
+- **Neon/Supabase** - Database (free tier)
+- **Upstash** - Redis (free tier)
+
+## 📚 Documentation
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Comprehensive free hosting guide
+- **[App_techstack.md](./App_techstack.md)** - Technology decisions and rationale
+- **[App_devdocs.md](./App_devdocs.md)** - Development documentation
+- **[App_prd.md](./App_prd.md)** - Product requirements
+- **[AUDIO_ENGINE_V2.md](./AUDIO_ENGINE_V2.md)** - Audio engine specification
+
+## 🔐 Security
+
+- JWT-based authentication
+- Bcrypt password hashing
+- Helmet.js security headers
+- CORS protection
+- Rate limiting
+- Input validation with Zod
+
+## 🧪 Testing
+
+```bash
+# Backend tests
+cd backend
+npm test
+
+# Frontend tests
+cd frontend
+npm test
+```
+
+## 📈 Roadmap
+
+- [x] Core audio engine
+- [x] Visual entrainment patterns
+- [x] User authentication
+- [x] Session tracking
+- [x] Free hosting deployment guide
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics dashboard
+- [ ] Social features
+- [ ] AI-powered protocol recommendations
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## ⚠️ Medical Disclaimer
+
+This application is for wellness and entertainment purposes only. It is not intended to diagnose, treat, cure, or prevent any disease. Consult with a healthcare professional before use if you have any medical conditions, especially epilepsy or seizure disorders.
+
+## 🆘 Support
+
+- **Documentation**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment issues
+- **Issues**: Open an issue on GitHub
+- **Discussions**: Use GitHub Discussions for questions
+
+## 🌟 Acknowledgments
+
+- Web Audio API community
+- Three.js community
+- Open source contributors
+
+---
+
+**Status**: ✅ Production Ready  
+**Latest Version**: 1.0.0  
+**Deployment**: Free hosting available (see DEPLOYMENT.md)

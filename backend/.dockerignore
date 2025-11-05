@@ -1,0 +1,49 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Environment files (set in hosting platform)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist
+build
+*.log
+
+# Test files
+coverage
+.nyc_output
+*.test.ts
+*.spec.ts
+__tests__
+__mocks__
+
+# CI/CD
+.github
+railway.toml
+fly.toml
+docker-compose.yml
+deploy-*.sh
+deploy-*.ps1

@@ -16,6 +16,10 @@ interface GatewaySessionProps {
 
 export default function GatewaySession({ protocolId, onExit }: GatewaySessionProps) {
   const protocol = GATEWAY_PROTOCOLS[protocolId];
+  
+  console.log('[GatewaySession] Component mounted with protocolId:', protocolId);
+  console.log('[GatewaySession] Protocol loaded:', protocol ? protocol.name : 'NOT FOUND');
+  
   const [isPlaying, setIsPlaying] = useState(false);
   const [startStatus, setStartStatus] = useState<'idle' | 'starting' | 'playing' | 'error'>('idle');
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
@@ -30,8 +34,10 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
   const currentPhase = protocol?.phases[currentPhaseIndex];
 
   useEffect(() => {
+    console.log('[GatewaySession] useEffect cleanup hook registered');
     // Cleanup on unmount
     return () => {
+      console.log('[GatewaySession] Component unmounting, cleaning up...');
       handleStop();
     };
   }, []);
@@ -55,16 +61,18 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
     };
   }, []);
 
-  const handleStart = async (silent = false) => {
+  const handleStart = async () => {
     try {
       setStartStatus('starting');
       console.log('[GatewaySession] handleStart → initializing audio...');
+      
       // Initialize audio engine and ensure context is resumed on user gesture
       const ok = await audioService.initialize();
       if (!ok) {
         throw new Error('Audio initialization returned false');
       }
-      console.log('[GatewaySession] audio initialized');
+      console.log('[GatewaySession] audio initialized successfully');
+      
       await audioService.resume();
       console.log('[GatewaySession] audio context resumed');
 
@@ -72,57 +80,77 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
       audioService.fadeIn(2);
       console.log('[GatewaySession] fade in started');
 
-    setIsPlaying(true);
-    setStartStatus('playing');
-    // Reflect session state in global store (for visualization, etc.)
-  try { useSessionStore.getState().startSession(); } catch { /* no-op */ }
-      console.log('[GatewaySession] starting phase 0');
+      setIsPlaying(true);
+      setStartStatus('playing');
+      
+      // Reflect session state in global store (for visualization, etc.)
+      try { 
+        useSessionStore.getState().startSession(); 
+        console.log('[GatewaySession] session store updated');
+      } catch (e) { 
+        console.warn('[GatewaySession] Could not update session store:', e);
+      }
+      
+      console.log('[GatewaySession] starting phase 0 of', protocol?.phases.length);
       startPhase(0);
       
       // Start session timer
       sessionTimerRef.current = window.setInterval(() => {
         setSessionTime(prev => prev + 1);
       }, 1000);
+      
+      console.log('[GatewaySession] Session started successfully');
     } catch (error) {
-      console.error('Failed to start Gateway session:', error);
+      console.error('[GatewaySession] Failed to start Gateway session:', error);
       setStartStatus('error');
-      if (!silent) {
-        alert('Failed to initialize audio. Please check your browser permissions.');
-      }
+      alert(
+        'Failed to initialize audio system.\n\n' +
+        'This usually happens if:\n' +
+        '• Your browser blocked audio playback\n' +
+        '• Headphones are not connected\n' +
+        '• Audio permissions were denied\n\n' +
+        'Please check your browser settings and try again.'
+      );
     }
   };
 
-  // Auto-start binaural session on mount when entering a Gateway session view
-  // Falls back to the Start button if the browser blocks autoplay
-  const autoStartRef = useRef(false);
-  useEffect(() => {
-    if (!autoStartRef.current) {
-      autoStartRef.current = true;
-      // Defer to allow initial render; try silent start to avoid intrusive alerts
-      setTimeout(() => {
-        if (!isPlaying && startStatus === 'idle') {
-          handleStart(true);
-        }
-      }, 50);
-    }
-  });
+  // Note: Auto-start removed to comply with browser autoplay policies.
+  // Previously attempted to start audio automatically on component mount, but this:
+  // 1. Violates browser autoplay policies (requires user gesture)
+  // 2. Failed silently in most browsers, leaving UI in inconsistent state
+  // 3. Made debugging difficult as errors were swallowed with `silent: true`
+  // User must now explicitly click "Begin Gateway Session" button to start.
 
   const startPhase = (phaseIndex: number) => {
-    if (!protocol) return;
+    if (!protocol) {
+      console.error('[GatewaySession] Cannot start phase - no protocol loaded');
+      return;
+    }
 
     if (phaseIndex >= protocol.phases.length) {
       // Session complete
+      console.log('[GatewaySession] All phases completed, finishing session');
       handleComplete();
       return;
     }
 
     const phase = protocol.phases[phaseIndex];
-  setCurrentPhaseIndex(phaseIndex);
-  try { useSessionStore.getState().setCurrentPhase(phaseIndex); } catch { /* no-op */ }
+    console.log(`[GatewaySession] Starting phase ${phaseIndex + 1}/${protocol.phases.length}: ${phase.name}`);
+    console.log(`[GatewaySession] Phase duration: ${phase.duration}s, beat: ${Array.isArray(phase.beatFreq) ? phase.beatFreq.join('-') : phase.beatFreq}Hz`);
+    
+    setCurrentPhaseIndex(phaseIndex);
+    try { 
+      useSessionStore.getState().setCurrentPhase(phaseIndex); 
+      console.log('[GatewaySession] Updated session store phase');
+    } catch (e) { 
+      console.warn('[GatewaySession] Could not update session store phase:', e);
+    }
     setPhaseProgress(0);
 
     // Configure audio for this phase
+    console.log('[GatewaySession] Configuring audio for phase...');
     configureAudioForPhase(phase);
+    console.log('[GatewaySession] Audio configured successfully');
 
     // Start phase timer
     const phaseStartTime = Date.now();
@@ -146,12 +174,22 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
         if (phaseTimerRef.current) {
           clearInterval(phaseTimerRef.current);
         }
+        console.log(`[GatewaySession] Phase ${phaseIndex + 1} completed`);
         startPhase(phaseIndex + 1);
       }
     }, updateInterval);
   };
 
   const configureAudioForPhase = (phase: GatewayPhase) => {
+    console.log('[GatewaySession] Configuring audio:', {
+      beatFreq: phase.beatFreq,
+      carrierType: phase.carrierType,
+      preset: phase.preset,
+      isochronic: phase.isochronic?.enabled,
+      spatial: phase.spatial?.enabled,
+      ambient: phase.ambient?.type
+    });
+
     // Set beat frequency
     const beatFreq = Array.isArray(phase.beatFreq) ? phase.beatFreq[0] : phase.beatFreq;
     audioService.setBeatFrequency(beatFreq, 0.5, phase.carrierType);
@@ -192,7 +230,7 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
     // Enhanced reverb for deeper states
     if (phase.reverb) {
       // Note: reverb control would need to be added to audioService
-      console.log('Setting reverb to:', phase.reverb);
+      console.log('[GatewaySession] Reverb requested:', phase.reverb, '(not yet implemented)');
     }
   };
 
@@ -235,9 +273,15 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
   };
 
   const handleStop = () => {
+    console.log('[GatewaySession] Stopping session');
     setIsPlaying(false);
     setStartStatus('idle');
-  try { useSessionStore.getState().stopSession(); } catch { /* no-op */ }
+    try { 
+      useSessionStore.getState().stopSession(); 
+      console.log('[GatewaySession] Session store updated (stopped)');
+    } catch (e) { 
+      console.warn('[GatewaySession] Could not update session store:', e);
+    }
     
     if (phaseTimerRef.current) {
       clearInterval(phaseTimerRef.current);
@@ -250,22 +294,34 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
     }
 
     // Stop ambient noise and fade out audio
+    console.log('[GatewaySession] Fading out audio...');
     audioService.fadeOut(2);
     
     setTimeout(() => {
+      console.log('[GatewaySession] Destroying audio service');
       audioService.destroy();
     }, 2000);
   };
 
   const handleEmergencyStop = () => {
+    console.log('[GatewaySession] EMERGENCY STOP activated');
     setEmergencyStop(true);
     handleStop();
-  try { useSessionStore.getState().emergencyStop(); } catch { /* no-op */ }
+    try { 
+      useSessionStore.getState().emergencyStop(); 
+    } catch (e) { 
+      console.warn('[GatewaySession] Could not trigger emergency stop in store:', e);
+    }
   };
 
   const handleComplete = () => {
+    console.log('[GatewaySession] Session completed successfully');
     handleStop();
-  try { useSessionStore.getState().stopSession(); } catch { /* no-op */ }
+    try { 
+      useSessionStore.getState().stopSession(); 
+    } catch (e) { 
+      console.warn('[GatewaySession] Could not update session store:', e);
+    }
     
     // Show completion message
     setTimeout(() => {
@@ -394,8 +450,14 @@ export default function GatewaySession({ protocolId, onExit }: GatewaySessionPro
       {/* Controls */}
       <div className="session-controls">
         {!isPlaying ? (
-          <button onClick={() => handleStart(false)} className="btn-start" disabled={startStatus === 'starting'}>
-            {startStatus === 'starting' ? 'Starting…' : 'Begin Gateway Session'}
+          <button 
+            onClick={handleStart} 
+            className="btn-start" 
+            disabled={startStatus === 'starting'}
+          >
+            {startStatus === 'starting' ? 'Starting…' : 
+             startStatus === 'error' ? '⚠️ Retry Start Session' :
+             'Begin Gateway Session'}
           </button>
         ) : (
           <>
