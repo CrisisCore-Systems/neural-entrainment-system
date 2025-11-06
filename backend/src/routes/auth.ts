@@ -86,6 +86,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
         userId: user.id,
         email: user.email,
         username: user.username,
+        isAdmin: false, // New users are not admin by default
       });
 
       // Cache user session in Redis
@@ -101,6 +102,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
           email: user.email,
           username: user.username,
           createdAt: user.created_at,
+          isAdmin: false,
         },
         token,
       });
@@ -130,7 +132,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
 
       // Find user
       const result = await fastify.pg.query(
-        `SELECT id, email, username, password_hash, is_active, is_verified
+        `SELECT id, email, username, password_hash, is_active, is_verified, is_admin
          FROM users WHERE email = $1`,
         [body.email]
       );
@@ -169,6 +171,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
         userId: user.id,
         email: user.email,
         username: user.username,
+        isAdmin: user.is_admin || false,
       });
 
       // Cache session in Redis
@@ -184,6 +187,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
           email: user.email,
           username: user.username,
           isVerified: user.is_verified,
+          isAdmin: user.is_admin || false,
         },
         token,
       });
@@ -214,7 +218,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
       const decoded = await request.jwtVerify() as { userId: string };
 
       const result = await fastify.pg.query(
-        `SELECT id, email, username, created_at, last_login, is_verified,
+        `SELECT id, email, username, created_at, last_login, is_verified, is_admin,
                 gateway_access, gateway_level, gateway_training_completed, total_standard_sessions
          FROM users WHERE id = $1`,
         [decoded.userId]
