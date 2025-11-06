@@ -695,3 +695,13 @@
     min-width: 100%;
   }
 }
+
+/* Button pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.8);
+  }
+}

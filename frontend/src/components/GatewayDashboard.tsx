@@ -232,6 +232,18 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
         {isUnlocked && selectedProtocol === protocolKey && (
           <button
             className="btn-begin-session"
+            style={{
+              position: 'relative',
+              zIndex: 10,
+              backgroundColor: '#a78bfa',
+              color: 'white',
+              padding: '1rem',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              border: '2px solid #ec4899',
+              cursor: 'pointer',
+              animation: 'pulse 2s infinite'
+            }}
             onClick={(e) => {
               e.stopPropagation();
               console.log('[GatewayDashboard] Begin Session clicked for protocol:', protocolKey);
@@ -246,7 +258,7 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
               }
             }}
           >
-            Begin Session →
+            🚀 BEGIN SESSION NOW →
           </button>
         )}
 

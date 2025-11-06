@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audio Test - Neural Entrainment</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: system-ui;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    button:hover { background: #764ba2; }
+    .status {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #1e293b;
+      border-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 Audio System Test</h1>
+  <p>Click "Test Audio" to verify your browser can play binaural beats.</p>
+  
+  <button onclick="testAudio()">Test Audio (440Hz + 10Hz beat)</button>
+  <button onclick="stopAudio()">Stop Audio</button>
+  
+  <div class="status" id="status">Status: Ready</div>
+  
+  <script>
+    let audioContext = null;
+    let leftOsc = null;
+    let rightOsc = null;
+    let gainNode = null;
+    let merger = null;
+    
+    function log(msg) {
+      document.getElementById('status').innerHTML += '<br>' + msg;
+      console.log(msg);
+    }
+    
+    async function testAudio() {
+      try {
+        log('Initializing audio context...');
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        log('Audio context state: ' + audioContext.state);
+        
+        if (audioContext.state === 'suspended') {
+          log('Resuming audio context...');
+          await audioContext.resume();
+        }
+        
+        log('Creating stereo merger...');
+        merger = audioContext.createChannelMerger(2);
+        
+        log('Creating gain node...');
+        gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.15;
+        
+        log('Creating left oscillator (440 Hz)...');
+        leftOsc = audioContext.createOscillator();
+        leftOsc.frequency.value = 440;
+        leftOsc.type = 'sine';
+        
+        log('Creating right oscillator (450 Hz = 10 Hz beat)...');
+        rightOsc = audioContext.createOscillator();
+        rightOsc.frequency.value = 450;
+        rightOsc.type = 'sine';
+        
+        log('Connecting audio graph...');
+        leftOsc.connect(merger, 0, 0);
+        rightOsc.connect(merger, 0, 1);
+        merger.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        log('Starting oscillators...');
+        leftOsc.start();
+        rightOsc.start();
+        
+        log('✅ SUCCESS! You should hear a 10 Hz binaural beat.');
+        log('(A wavering tone that pulses 10 times per second)');
+      } catch (error) {
+        log('❌ ERROR: ' + error.message);
+        console.error(error);
+      }
+    }
+    
+    function stopAudio() {
+      try {
+        if (leftOsc) leftOsc.stop();
+        if (rightOsc) rightOsc.stop();
+        if (audioContext) audioContext.close();
+        log('Audio stopped.');
+      } catch (error) {
+        log('Error stopping: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
