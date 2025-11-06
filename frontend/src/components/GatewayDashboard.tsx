@@ -219,6 +219,16 @@ export default function GatewayDashboard({ onExit, onStartSession }: GatewayDash
           </div>
         )}
 
+        {(() => {
+          console.log('[GatewayDashboard] Button check for', protocolKey, ':', {
+            isUnlocked,
+            selectedProtocol,
+            shouldShowButton: isUnlocked && selectedProtocol === protocolKey,
+            shouldShowClickText: isUnlocked && !selectedProtocol
+          });
+          return null;
+        })()}
+
         {isUnlocked && selectedProtocol === protocolKey && (
           <button
             className="btn-begin-session"
