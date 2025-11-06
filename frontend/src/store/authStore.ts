@@ -11,6 +11,7 @@ interface User {
   email: string;
   username: string;
   isVerified: boolean;
+  isAdmin?: boolean;
   gatewayAccess?: boolean;
   gatewayLevel?: number;
   gatewayTrainingCompleted?: boolean;

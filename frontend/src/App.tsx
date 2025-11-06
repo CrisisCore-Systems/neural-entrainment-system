@@ -84,12 +84,14 @@ function App() {
         >
           Analytics
         </button>
-        <button
-          className={`gateway-button ${view === 'gateway' ? 'active' : ''}`}
-          onClick={() => setView('gateway')}
-        >
-          🌌 Gateway
-        </button>
+        {(user?.isAdmin || user?.gatewayAccess) && (
+          <button
+            className={`gateway-button ${view === 'gateway' ? 'active' : ''}`}
+            onClick={() => setView('gateway')}
+          >
+            🌌 Gateway
+          </button>
+        )}
       </nav>
       
       {view === 'protocols' && (
