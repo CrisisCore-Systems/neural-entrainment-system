@@ -368,9 +368,18 @@ chore: update dependencies
 
 ## Testing
 
-### Backend Tests (70+ Passing ✅)
+### Test Suite Overview (239+ Tests)
 
-**Framework**: Vitest with comprehensive mocking
+**Complete testing infrastructure** with unit, component, and E2E tests:
+- Backend: 70 unit tests ✅
+- Frontend: 117 component tests 🟡 (37 passing, 37 need UI adjustments)
+- E2E: 52 Playwright tests 📝
+
+For detailed test documentation, see: **[TEST_SUITE_SUMMARY.md](./TEST_SUITE_SUMMARY.md)**
+
+### Backend Tests (70 Passing ✅)
+
+**Framework**: Vitest 1.6.1 with @vitest/coverage-v8
 
 ```bash
 cd backend
@@ -381,8 +390,11 @@ npm test
 # Run tests once (CI mode)
 npm run test:run
 
-# Run with coverage
-npx vitest --coverage
+# Run with coverage report
+npm run test:coverage
+
+# Run in interactive UI
+npm run test:ui
 
 # Run specific test file
 npx vitest run src/__tests__/routes/auth.test.ts
@@ -419,9 +431,9 @@ describe('Feature Name', () => {
 });
 ```
 
-### Frontend Tests (17+ Passing ✅)
+### Frontend Tests (117 Tests - 37 Passing 🟡)
 
-**Framework**: Vitest + React Testing Library
+**Framework**: Vitest 1.6.1 + React Testing Library + jsdom
 
 ```bash
 cd frontend
@@ -432,19 +444,22 @@ npm test
 # Run tests once
 npm run test:run
 
-# Run with UI
-npm run test:ui
-
-# Coverage report
+# Run with coverage report
 npm run test:coverage
+
+# Run in interactive UI
+npm run test:ui
 ```
 
 **Test Coverage:**
 - ✅ **Auth component** (17 tests): Login, registration, validation, error handling, loading states
-- More component tests coming soon
+- 🟡 **SessionControl component** (51 tests): Session lifecycle, controls, phases, metrics, protocol conversion (37 need UI adjustments)
+- 🟡 **ProtocolSelector component** (49 tests): Protocol loading, filtering, sorting, selection, Gateway access (37 need UI adjustments)
 
 **Test Files:**
-- `frontend/src/test/Auth.test.tsx` - Authentication component
+- `frontend/src/test/Auth.test.tsx` - Authentication component (17 passing)
+- `frontend/src/test/SessionControl.test.tsx` - Session management (51 tests, needs UI selector updates)
+- `frontend/src/test/ProtocolSelector.test.tsx` - Protocol selection (49 tests, needs UI selector updates)
 - `frontend/src/test/setup.ts` - Test configuration with Web Audio + WebGL mocks
 
 **Writing Component Tests:**
@@ -459,6 +474,45 @@ it('should render and handle click', () => {
   expect(screen.getByText('Clicked')).toBeInTheDocument();
 });
 ```
+
+### E2E Tests with Playwright (52 Tests 📝)
+
+**Framework**: Playwright (Chromium, Firefox, WebKit)
+
+```bash
+cd backend
+
+# Run all E2E tests
+npm run e2e
+
+# Run in headed mode (see browser)
+npm run e2e:headed
+
+# Run with Playwright UI
+npm run e2e:ui
+
+# Run in debug mode
+npm run e2e:debug
+
+# Run specific browser
+npx playwright test --project=chromium
+```
+
+**Test Scenarios:**
+- 🎭 **Authentication Flow** (9 tests): Login, validation, session persistence, logout
+- 🎯 **Protocol Selection** (11 tests): Browsing, filtering, sorting, Gateway tile, errors
+- 🎮 **Session Management** (14 tests): Start/pause/stop, metrics, emergency stop, phase transitions
+- 🚀 **Complete User Journeys** (7 tests): Full workflows, responsiveness, error recovery
+- 🔐 **Gateway Process** (11 tests): Admin features, frequency control, safety limits, presets
+
+**Test Files:**
+- `backend/tests/auth-flow.spec.ts` - Login and authentication
+- `backend/tests/protocol-selection.spec.ts` - Protocol browsing and selection
+- `backend/tests/session-management.spec.ts` - Session lifecycle
+- `backend/tests/user-journey.spec.ts` - Complete user workflows
+- `backend/tests/gateway-process.spec.ts` - Advanced Gateway features
+
+**Note**: E2E tests require both frontend and backend servers running. Playwright config auto-starts frontend dev server.
 
 ### Integration Testing
 
