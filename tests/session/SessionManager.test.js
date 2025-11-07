@@ -11,8 +11,18 @@ describe('SessionManager', () => {
     // Create fresh SessionManager
     sessionManager = new SessionManager();
     
-    // Clear all jest mocks
-    jest.clearAllMocks();
+    // Clear mock call history but preserve implementations
+    if (localStorage.getItem.mockClear) {
+      localStorage.getItem.mockClear();
+      localStorage.setItem.mockClear();
+      localStorage.removeItem.mockClear();
+      localStorage.clear.mockClear();
+    }
+    if (console.log.mockClear) {
+      console.log.mockClear();
+      console.warn.mockClear();
+      console.error.mockClear();
+    }
   });
 
   describe('Constructor', () => {
