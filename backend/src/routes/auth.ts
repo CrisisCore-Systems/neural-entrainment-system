@@ -76,10 +76,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
       const user = result.rows[0];
 
       // Create default preferences
-      await fastify.pg.query(
-        'INSERT INTO user_preferences (user_id) VALUES ($1)',
-        [user.id]
-      );
+      await fastify.pg.query('INSERT INTO user_preferences (user_id) VALUES ($1)', [user.id]);
 
       // Generate JWT token
       const token = fastify.jwt.sign({
@@ -115,7 +112,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
       }
       fastify.log.error(error, 'Registration error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      return reply.code(500).send({ 
+      return reply.code(500).send({
         error: 'Internal server error',
         message: errorMessage,
       });
@@ -161,10 +158,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
       }
 
       // Update last login
-      await fastify.pg.query(
-        'UPDATE users SET last_login = NOW() WHERE id = $1',
-        [user.id]
-      );
+      await fastify.pg.query('UPDATE users SET last_login = NOW() WHERE id = $1', [user.id]);
 
       // Generate JWT token
       const token = fastify.jwt.sign({
@@ -200,7 +194,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
       }
       fastify.log.error(error, 'Login error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      return reply.code(500).send({ 
+      return reply.code(500).send({
         error: 'Internal server error',
         message: errorMessage,
       });
@@ -211,47 +205,55 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
    * GET /api/auth/me
    * Get current user profile
    */
-  fastify.get('/me', {
-    onRequest: [fastify.authenticate],
-  }, async (request, reply) => {
-    try {
-      const decoded = await request.jwtVerify() as { userId: string };
+  fastify.get(
+    '/me',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      try {
+        const decoded = (await request.jwtVerify()) as { userId: string };
 
-      const result = await fastify.pg.query(
-        `SELECT id, email, username, created_at, last_login, is_verified, is_admin,
+        const result = await fastify.pg.query(
+          `SELECT id, email, username, created_at, last_login, is_verified, is_admin,
                 gateway_access, gateway_level, gateway_training_completed, total_standard_sessions
          FROM users WHERE id = $1`,
-        [decoded.userId]
-      );
+          [decoded.userId]
+        );
 
-      if (result.rows.length === 0) {
-        return reply.code(404).send({ error: 'User not found' });
+        if (result.rows.length === 0) {
+          return reply.code(404).send({ error: 'User not found' });
+        }
+
+        return reply.send({ user: result.rows[0] });
+      } catch (error) {
+        fastify.log.error(error, 'Get user error');
+        return reply.code(500).send({ error: 'Internal server error' });
       }
-
-      return reply.send({ user: result.rows[0] });
-    } catch (error) {
-      fastify.log.error(error, 'Get user error');
-      return reply.code(500).send({ error: 'Internal server error' });
     }
-  });
+  );
 
   /**
    * POST /api/auth/logout
    * Logout user (clear Redis cache)
    */
-  fastify.post('/logout', {
-    onRequest: [fastify.authenticate],
-  }, async (request, reply) => {
-    try {
-      const decoded = await request.jwtVerify() as { userId: string };
-      
-      // Remove session from Redis
-      await fastify.redis.del(`user_session:${decoded.userId}`);
+  fastify.post(
+    '/logout',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      try {
+        const decoded = (await request.jwtVerify()) as { userId: string };
 
-      return reply.send({ message: 'Logged out successfully' });
-    } catch (error) {
-      fastify.log.error(error, 'Logout error');
-      return reply.code(500).send({ error: 'Internal server error' });
+        // Remove session from Redis
+        await fastify.redis.del(`user_session:${decoded.userId}`);
+
+        return reply.send({ message: 'Logged out successfully' });
+      } catch (error) {
+        fastify.log.error(error, 'Logout error');
+        return reply.code(500).send({ error: 'Internal server error' });
+      }
     }
-  });
+  );
 };

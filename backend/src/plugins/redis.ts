@@ -9,7 +9,11 @@ import fastifyRedis from '@fastify/redis';
 import { config } from '../config/index.js';
 import net from 'node:net';
 
-async function probeRedisConnectivity(host: string, port: number, timeoutMs = 600): Promise<boolean> {
+async function probeRedisConnectivity(
+  host: string,
+  port: number,
+  timeoutMs = 600
+): Promise<boolean> {
   return new Promise((resolve) => {
     const socket = net.createConnection({ host, port });
     const timer = setTimeout(() => {
@@ -52,19 +56,19 @@ const inMemoryCache = {
     }
     return data.value;
   },
-  
+
   async set(key: string, value: string): Promise<void> {
     memoryCache.set(key, { value, expiry: Date.now() + 86400000 }); // 24 hours default
   },
-  
+
   async setex(key: string, seconds: number, value: string): Promise<void> {
-    memoryCache.set(key, { value, expiry: Date.now() + (seconds * 1000) });
+    memoryCache.set(key, { value, expiry: Date.now() + seconds * 1000 });
   },
-  
+
   async del(key: string): Promise<void> {
     memoryCache.delete(key);
   },
-  
+
   async ping(): Promise<string> {
     return 'PONG';
   },
@@ -103,7 +107,13 @@ const redisPlugin: FastifyPluginAsync = async (fastify) => {
   try {
     const opts = targetUrl
       ? { url: config.redis.url, lazyConnect: true, connectTimeout: 1000, maxRetriesPerRequest: 0 }
-      : { host: config.redis.host, port: config.redis.port, lazyConnect: true, connectTimeout: 1000, maxRetriesPerRequest: 0 };
+      : {
+          host: config.redis.host,
+          port: config.redis.port,
+          lazyConnect: true,
+          connectTimeout: 1000,
+          maxRetriesPerRequest: 0,
+        };
     await fastify.register(fastifyRedis, opts as any);
     fastify.log.info(`Redis enabled (lazy connect) at ${host}:${port}`);
   } catch (err) {

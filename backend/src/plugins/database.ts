@@ -9,7 +9,8 @@ import { config } from '../config/index.js';
 
 const dbPlugin: FastifyPluginAsync = async (fastify) => {
   await fastify.register(fastifyPostgres, {
-    connectionString: config.database.url || 
+    connectionString:
+      config.database.url ||
       `postgresql://${config.database.user}:${config.database.password}@${config.database.host}:${config.database.port}/${config.database.name}`,
   });
 

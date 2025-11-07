@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Coverage
+coverage/
+
+# Database
+*.sql
+database/
+
+# Documentation
+*.md
+
+# Config files
+.env*
+*.json
+package-lock.json
+
+# Logs
+*.log

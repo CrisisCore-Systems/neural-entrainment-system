@@ -101,12 +101,12 @@ async function start() {
       host: '0.0.0.0',
     });
 
-      fastify.log.info(`Server listening at ${address}`);
-      fastify.log.info(`Environment: ${config.env}`);
-      const allowedOrigins = Array.isArray(config.cors.origin)
-        ? (config.cors.origin as string[]).join(', ')
-        : (config.cors.origin as string);
-      fastify.log.info(`CORS origins: ${allowedOrigins}`);
+    fastify.log.info(`Server listening at ${address}`);
+    fastify.log.info(`Environment: ${config.env}`);
+    const allowedOrigins = Array.isArray(config.cors.origin)
+      ? (config.cors.origin as string[]).join(', ')
+      : (config.cors.origin as string);
+    fastify.log.info(`CORS origins: ${allowedOrigins}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

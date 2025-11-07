@@ -13,7 +13,7 @@ export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get('/', async (_request, reply) => {
     try {
       fastify.log.info('Fetching protocols...');
-      
+
       if (!fastify.pg) {
         fastify.log.error('PostgreSQL client not available');
         return reply.code(500).send({ error: 'Database connection not available' });
@@ -32,7 +32,7 @@ export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
     } catch (error) {
       fastify.log.error(error, 'Get protocols error');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      return reply.code(500).send({ 
+      return reply.code(500).send({
         error: 'Internal server error',
         message: errorMessage,
       });
@@ -47,10 +47,7 @@ export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
     try {
       const { id } = request.params as { id: string };
 
-      const result = await fastify.pg.query(
-        'SELECT * FROM protocols WHERE id = $1',
-        [id]
-      );
+      const result = await fastify.pg.query('SELECT * FROM protocols WHERE id = $1', [id]);
 
       if (result.rows.length === 0) {
         return reply.code(404).send({ error: 'Protocol not found' });
