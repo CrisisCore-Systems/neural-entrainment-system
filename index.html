@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="adaptive">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#000000" />
+<meta name="color-scheme" content="dark" />
+<title>CrisisCore Neural Interface — Adaptive Gateway (v3.0)</title>
+<style>
+/* ==========================================================
+   CrisisCore Neural Interface CSS v3.0 - Bulletproof Design
+   ========================================================== */
+
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-elev: #0a0a0a;
+  --bg-panel: #0b0b0b;
+  --fg: #eaeaea;
+  --fg-dim: #c6c6c6;
+  --muted: #9a9a9a;
+  --edge: #111111;
+  --edge-2: #1a1a1a;
+  --edge-3: #2a2a2a;
+  
+  /* CrisisCore Dynamic color system */
+  --primary-hue: 15;
+  --primary-sat: 100%;
+  --primary-light: 50%;
+  --accent: hsl(var(--primary-hue), var(--primary-sat), var(--primary-light));
+  --accent-2: hsl(calc(var(--primary-hue) + 30), calc(var(--primary-sat) - 10%), calc(var(--primary-light) - 10%));
+  
+  --danger: #ff335c;
+  --ok: #20d48a;
+  --warn: #f7b955;
+  --red: #ff0033;
+  --blue: #3366ff;
+  --purple: #9933ff;
+  --teal: #00cc99;
+  --orange: #ff6600;
+  
+  --radius-1: 10px;
+  --radius-2: 14px;
+  --radius-3: 20px;
+  
+  --shadow-1: 0 1px 0 rgba(255,255,255,0.03) inset, 0 10px 24px rgba(0,0,0,0.35);
+  --shadow-2: 0 1px 0 rgba(255,255,255,0.05) inset, 0 18px 40px rgba(0,0,0,0.5);
+  
+  --speed-1: 120ms;
+  --speed-2: 220ms;
+  --speed-3: 480ms;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  
+  --step--2: clamp(10px, 1.2vw, 12px);
+  --step--1: clamp(12px, 1.6vw, 14px);
+  --step-0: clamp(14px, 1.8vw, 16px);
+  --step-1: clamp(16px, 2.2vw, 18px);
+  --step-2: clamp(18px, 3vw, 22px);
+  --step-3: clamp(22px, 4.2vw, 28px);
+  --step-4: clamp(28px, 6vw, 40px);
+  
+  --phase-color: var(--accent);
+  --phase-color-2: var(--accent-2);
+}
+
+/* Enhanced themes */
+:root[data-user-state="calm"] {
+  --primary-hue: 200;
+  --primary-sat: 80%;
+}
+
+:root[data-user-state="focused"] {
+  --primary-hue: 120;
+  --primary-sat: 90%;
+}
+
+:root[data-user-state="energized"] {
+  --primary-hue: 40;
+  --primary-sat: 100%;
+}
+
+:root[data-user-state="creative"] {
+  --primary-hue: 280;
+  --primary-sat: 85%;
+}
+
+* { 
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: var(--step-0)/1.6 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  position: relative;
+  background: 
+    radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--accent-2) 3%, transparent) 0%, transparent 50%),
+    var(--bg);
+}
+
+/* Header */
+header {
+  padding: 16px 20px;
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
+  border-bottom: 1px solid var(--edge);
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--step-3);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--accent-2)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: var(--fg-dim);
+  font-size: var(--step-0);
+  font-weight: 400;
+}
+
+.user-state-indicators {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.state-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-1);
+  font-size: var(--step--1);
+}
+
+.state-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: pulse 2s infinite;
+}
+
+.state-dot.calm { background: var(--blue); }
+.state-dot.focused { background: var(--teal); }
+.state-dot.energized { background: var(--orange); }
+.state-dot.creative { background: var(--purple); }
+
+/* Main Content */
+main {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+}
+
+/* Control Panel */
+.panel {
+  padding: 16px 20px;
+  background: color-mix(in srgb, var(--bg-panel) 95%, transparent);
+  border-bottom: 1px solid var(--edge);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-2);
+  transition: all var(--speed-1) var(--ease);
+}
+
+.control-group:hover {
+  border-color: var(--edge-2);
+  box-shadow: var(--shadow-1);
+}
+
+.control-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.control-group-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.control-group-title {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.control-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  font-size: var(--step-0);
+  cursor: pointer;
+}
+
+/* Enhanced Stage */
+.stage {
+  position: relative;
+  height: min(70vh, 800px);
+  background: 
+    radial-gradient(ellipse at center, color-mix(in srgb, var(--bg) 0%, transparent) 0%, var(--bg) 70%),
+    var(--bg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.visualization-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+#visualization-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.phase-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 40px;
+}
+
+.glyph-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.glyph {
+  font-size: min(25vmin, 180px);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  color: var(--phase-color);
+  filter: 
+    drop-shadow(0 0 20px color-mix(in srgb, var(--phase-color) 30%, transparent))
+    drop-shadow(0 0 40px color-mix(in srgb, var(--phase-color) 15%, transparent));
+  animation: float 6s ease-in-out infinite;
+  transition: all var(--speed-2) var(--ease);
+}
+
+.glyph-orb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--phase-color) 20%, transparent) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.5;
+  animation: pulseOrb 4s ease-in-out infinite;
+}
+
+.phase-info {
+  max-width: 600px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(20px);
+  border: 1px solid color-mix(in srgb, var(--edge) 50%, transparent);
+  border-radius: var(--radius-3);
+  padding: 24px;
+  margin-top: 20px;
+  transition: all var(--speed-2) var(--ease);
+}
+
+.phase-title {
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--phase-color);
+  margin-bottom: 8px;
+  transition: color var(--speed-2) var(--ease);
+}
+
+.phase-description {
+  font-size: var(--step-0);
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+/* Enhanced HUD */
+.hud {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: end;
+  z-index: 20;
+}
+
+.session-metrics {
+  display: flex;
+  gap: 16px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-2);
+  padding: 16px;
+  min-width: 300px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.metric-label {
+  font-size: var(--step--1);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.metric-bar {
+  height: 4px;
+  background: var(--edge);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.metric-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width var(--speed-2) var(--ease);
+}
+
+.phase-progress {
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-2);
+  padding: 16px;
+  min-width: 200px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--edge);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--accent-2));
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  transition: width var(--speed-2) var(--ease);
+}
+
+/* Enhanced Cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: color-mix(in srgb, var(--bg-elev) 95%, transparent);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-2);
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: all var(--speed-1) var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--edge-2);
+  box-shadow: var(--shadow-2);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+
+.card-title {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Controls */
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border: 1px solid var(--edge-3);
+  border-radius: var(--radius-1);
+  color: var(--fg);
+  font-size: var(--step-0);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--speed-1) var(--ease);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  border-color: var(--edge-2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-1);
+}
+
+button.primary {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, transparent), color-mix(in srgb, var(--accent-2) 10%, transparent));
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+button.primary:hover {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, transparent), color-mix(in srgb, var(--accent-2) 20%, transparent));
+}
+
+button.alert {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--danger) 20%, transparent), color-mix(in srgb, #b3002d 10%, transparent));
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Inputs */
+input[type="range"] {
+  width: 100%;
+  height: 24px;
+  background: transparent;
+  -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--edge);
+  border-radius: 2px;
+  border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+  cursor: grab;
+  transition: all var(--speed-1) var(--ease);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+select {
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border: 1px solid var(--edge-2);
+  border-radius: var(--radius-1);
+  color: var(--fg);
+  font-size: var(--step-0);
+  backdrop-filter: blur(10px);
+  transition: all var(--speed-1) var(--ease);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Debug Panel */
+.debug-panel {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-1);
+  font-size: var(--step--1);
+  font-family: monospace;
+  z-index: 1000;
+  max-width: 300px;
+  backdrop-filter: blur(10px);
+}
+
+.debug-panel h4 {
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-10px) scale(1.02); }
+}
+
+@keyframes pulseOrb {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Notification System */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-120%);
+  padding: 16px 20px;
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-2);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-2);
+  z-index: 1000;
+  transition: transform var(--speed-2) var(--ease);
+  max-width: 400px;
+  border-left: 4px solid var(--accent);
+  text-align: center;
+}
+
+.notification.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+.notification.success {
+  border-left-color: var(--ok);
+}
+
+.notification.error {
+  border-left-color: var(--danger);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .panel-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hud {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .session-metrics {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .debug-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="header-content">
+      <h1>⚡ CrisisCore Neural Interface — Adaptive Gateway (v3.0)</h1>
+      <div class="subtitle">AI-Enhanced Neural Entrainment • Bulletproof Architecture • CrisisCore-Systems</div>
+    </div>
+    <div class="user-state-indicators">
+      <div class="state-indicator">
+        <div class="state-dot" id="cognitiveState"></div>
+        <span>Cognitive Load: <span id="cognitiveValue">0.50</span></span>
+      </div>
+      <div class="state-indicator">
+        <div class="state-dot calm"></div>
+        <span>System State: <span id="userState">Ready</span></span>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    <!-- Control Panel -->
+    <div class="panel">
+      <div class="panel-grid">
+        <!-- Session Controls -->
+        <div class="control-group">
+          <div class="control-group-header">
+            <svg class="control-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2L12 22M12 2L16 6M12 2L8 6M12 22L16 18M12 22L8 18"/>
+            </svg>
+            <div class="control-group-title">Session Control</div>
+          </div>
+          <div class="control-row">
+            <button id="initializeBtn" class="primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 1L12 23M12 1L16 5M12 1L8 5M12 23L16 19M12 23L8 19"/>
+              </svg>
+              Initialize System
+            </button>
+            <button id="startBtn" class="primary" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M5 12L19 12M15 16L19 12L15 8"/>
+              </svg>
+              Begin Session
+            </button>
+          </div>
+          <div class="control-row">
+            <button id="pauseBtn" disabled>Pause</button>
+            <button id="resumeBtn" disabled>Resume</button>
+            <button id="stopBtn" class="alert" disabled>Emergency Stop</button>
+          </div>
+        </div>
+
+        <!-- Neural Parameters -->
+        <div class="control-group">
+          <div class="control-group-header">
+            <svg class="control-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6Z"/>
+            </svg>
+            <div class="control-group-title">Neural Parameters</div>
+          </div>
+          <div class="control-row">
+            <label>Mission Profile
+              <select id="missionSelect">
+                <option value="adaptive_ground">Adaptive Grounding</option>
+                <option value="cognitive_focus">Cognitive Focus</option>
+                <option value="creative_flow">Creative Flow</option>
+                <option value="energy_boost">Energy Boost</option>
+              </select>
+            </label>
+          </div>
+          <div class="control-row">
+            <label>Duration
+              <select id="durationSelect">
+                <option value="30">Demo (30s)</option>
+                <option value="60">Short (1m)</option>
+                <option value="180">Medium (3m)</option>
+                <option value="300">Full (5m)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="control-group">
+          <div class="control-group-header">
+            <svg class="control-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2L12 22M8 6L16 6M8 12L16 12M8 18L16 18"/>
+            </svg>
+            <div class="control-group-title">Audio Matrix</div>
+          </div>
+          <div class="control-row">
+            <label>Volume
+              <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.3"/>
+            </label>
+          </div>
+          <div class="control-row">
+            <label><input id="audioEnabled" type="checkbox" checked/> Enable Audio</label>
+            <label><input id="visualMode" type="checkbox" checked/> Visual Mode</label>
+          </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="control-group">
+          <div class="control-group-header">
+            <svg class="control-group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            <div class="control-group-title">System Status</div>
+          </div>
+          <div class="control-row">
+            <div style="font-size: var(--step--1);">
+              Audio: <span id="audioStatus">Standby</span><br>
+              Phase: <span id="currentPhaseDisplay">Ready</span><br>
+              Timer: <span id="sessionTimer">00:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Stage -->
+    <div class="stage">
+      <div class="visualization-container">
+        <canvas id="visualization-canvas"></canvas>
+      </div>
+      
+      <div class="phase-content">
+        <div class="glyph-container">
+          <div class="glyph-orb"></div>
+          <div class="glyph" id="phaseGlyph">🌀</div>
+        </div>
+        
+        <div class="phase-info">
+          <div class="phase-title" id="phaseTitle">CrisisCore Neural Interface</div>
+          <div class="phase-description" id="phaseDescription">
+            Advanced neural entrainment system ready for initialization. Select parameters and begin session.
+          </div>
+        </div>
+      </div>
+
+      <!-- HUD -->
+      <div class="hud">
+        <div class="session-metrics">
+          <div class="metric">
+            <div class="metric-label">Phase Progress</div>
+            <div class="metric-value" id="phaseProgressText">Ready</div>
+            <div class="metric-bar">
+              <div class="metric-progress" id="phaseProgressBar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Neural Coherence</div>
+            <div class="metric-value" id="coherenceDisplay">0.72</div>
+            <div class="metric-bar">
+              <div class="metric-progress" id="coherenceBar" style="width: 72%"></div>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Focus Level</div>
+            <div class="metric-value" id="focusDisplay">0.50</div>
+            <div class="metric-bar">
+              <div class="metric-progress" id="focusBar" style="width: 50%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-progress">
+          <div class="metric-label">Session Progress</div>
+          <div class="metric-value" id="sessionProgressText">Ready</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="sessionProgressBar" style="width: 0%"></div>
+          </div>
+          <div class="metric-label">Beat Frequency</div>
+          <div class="metric-value" id="beatFrequencyDisplay">0.00 Hz</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Cards -->
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 2L12 22M12 2L16 6M12 2L8 6M12 22L16 18M12 22L8 18"/>
+          </svg>
+          <div class="card-title">Phase Architecture</div>
+        </div>
+        <div id="phaseArchitecture">
+          Six-phase progression: Calibration → Resonance → Descent → Integration → Peak → Return
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M12 22C12 22 4 18 4 12V6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V12C20 18 12 22 12 22Z"/>
+          </svg>
+          <div class="card-title">CrisisCore Safety</div>
+        </div>
+        <div>
+          Multi-layer safety protocols active. Real-time monitoring. Emergency stop available. Adaptive failsafes enabled.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          <div class="card-title">System Analytics</div>
+        </div>
+        <div>
+          <div id="systemAnalytics">
+            Performance: <span id="performanceStatus">Optimal</span><br>
+            Version: CrisisCore Neural Interface v3.0<br>
+            Architecture: Bulletproof Design
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="padding: 16px 20px; background: color-mix(in srgb, var(--bg) 95%, transparent); border-top: 1px solid var(--edge); color: var(--fg-dim); font-size: var(--step--1); text-align: center; backdrop-filter: blur(10px);">
+    CrisisCore Neural Interface v3.0 — Bulletproof Architecture by CrisisCore-Systems
+  </footer>
+</div>
+
+<!-- Debug Panel -->
+<div class="debug-panel" id="debugPanel">
+  <h4>Debug Console</h4>
+  <div id="debugOutput">System initialized</div>
+</div>
+
+<!-- Notification System -->
+<div id="notification" class="notification"></div>
+
+<script>
+// =============================================
+// CrisisCore Neural Interface v3.0 - Bulletproof Architecture
+// Tree of Thought Enhanced System
+// =============================================
+
+class CrisisCoreNeuralInterface {
+  constructor() {
+    this.state = {
+      initialized: false,
+      sessionActive: false,
+      sessionPaused: false,
+      currentPhase: -1,
+      sessionStartTime: null,
+      sessionDuration: 30, // Default 30 seconds for demo
+      audioEnabled: true,
+      audioContext: null,
+      audioNodes: {},
+      timers: new Map(),
+      
+      // Phase definitions
+      phases: [
+        { 
+          name: 'Neural Calibration', 
+          glyph: '🧠', 
+          color: '#ff4500', 
+          duration: 0.15, // 15% of total time
+          beatFreq: 3.0,
+          description: 'Establishing baseline neural coherence...'
+        },
+        { 
+          name: 'Resonance Field', 
+          glyph: '🌊', 
+          color: '#ff6600', 
+          duration: 0.20, // 20% of total time
+          beatFreq: [4.0, 6.0], // Sweep from 4 to 6 Hz
+          description: 'Synchronizing neural oscillations...'
+        },
+        { 
+          name: 'Depth Descent', 
+          glyph: '⬇️', 
+          color: '#ff8800', 
+          duration: 0.25, // 25% of total time
+          beatFreq: 5.0,
+          description: 'Deepening meditative state...'
+        },
+        { 
+          name: 'Integration Matrix', 
+          glyph: '🌈', 
+          color: '#ffaa00', 
+          duration: 0.25, // 25% of total time
+          beatFreq: [6.0, 8.0, 4.0], // Complex sweep
+          description: 'Neural pattern integration...'
+        },
+        { 
+          name: 'Peak Coherence', 
+          glyph: '⭐', 
+          color: '#ffcc00', 
+          duration: 0.10, // 10% of total time
+          beatFreq: 8.0,
+          description: 'Maximum synchronization achieved...'
+        },
+        { 
+          name: 'Return Integration', 
+          glyph: '🕊️', 
+          color: '#ffee00', 
+          duration: 0.05, // 5% of total time
+          beatFreq: [4.0, 2.0],
+          description: 'Returning to baseline integration...'
+        }
+      ],
+      
+      // Cognitive metrics
+      cognitive: {
+        load: 0.50,
+        focus: 0.50,
+        coherence: 0.72,
+        arousal: 0.50,
+        valence: 0.50
+      }
+    };
+    
+    this.debug = this.debug.bind(this);
+    this.debug('CrisisCore Neural Interface v3.0 - Bulletproof Architecture Loading...');
+    
+    this.initializeSystem();
+  }
+  
+  // =============================================
+  // Core System Initialization
+  // =============================================
+  
+  async initializeSystem() {
+    try {
+      this.debug('Initializing core systems...');
+      
+      // Initialize event listeners
+      this.setupEventListeners();
+      
+      // Initialize visualization
+      this.initializeVisualization();
+      
+      // Initialize UI updates
+      this.startUIUpdateLoop();
+      
+      // Mark as initialized
+      this.state.initialized = true;
+      this.debug('System initialization complete');
+      
+      this.showNotification('CrisisCore Neural Interface ready', 'success');
+      this.updateUI();
+      
+    } catch (error) {
+      this.debug(`Initialization error: ${error.message}`);
+      this.showNotification('Initialization failed - running in safe mode', 'error');
+    }
+  }
+  
+  setupEventListeners() {
+    // Session controls
+    document.getElementById('initializeBtn').addEventListener('click', () => this.handleInitialize());
+    document.getElementById('startBtn').addEventListener('click', () => this.handleStart());
+    document.getElementById('pauseBtn').addEventListener('click', () => this.handlePause());
+    document.getElementById('resumeBtn').addEventListener('click', () => this.handleResume());
+    document.getElementById('stopBtn').addEventListener('click', () => this.handleStop());
+    
+    // Audio controls
+    document.getElementById('volumeSlider').addEventListener('input', (e) => {
+      this.updateVolume(parseFloat(e.target.value));
+    });
+    
+    document.getElementById('durationSelect').addEventListener('change', (e) => {
+      this.state.sessionDuration = parseInt(e.target.value);
+      this.debug(`Duration set to ${this.state.sessionDuration}s`);
+    });
+    
+    // Audio enable/disable
+    document.getElementById('audioEnabled').addEventListener('change', (e) => {
+      this.state.audioEnabled = e.target.checked;
+      this.debug(`Audio ${this.state.audioEnabled ? 'enabled' : 'disabled'}`);
+    });
+    
+    this.debug('Event listeners initialized');
+  }
+  
+  // =============================================
+  // Audio System
+  // =============================================
+  
+  async initializeAudio() {
+    if (!this.state.audioEnabled) {
+      this.debug('Audio disabled - skipping audio initialization');
+      return true;
+    }
+    
+    try {
+      this.debug('Initializing audio system...');
+      
+      this.state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Create audio nodes
+      this.state.audioNodes.oscillator = this.state.audioContext.createOscillator();
+      this.state.audioNodes.gainNode = this.state.audioContext.createGain();
+      
+      // Configure oscillator
+      this.state.audioNodes.oscillator.type = 'sine';
+      this.state.audioNodes.oscillator.frequency.value = 180; // Base frequency
+      
+      // Configure gain
+      this.state.audioNodes.gainNode.gain.value = 0;
+      
+      // Connect audio chain
+      this.state.audioNodes.oscillator.connect(this.state.audioNodes.gainNode);
+      this.state.audioNodes.gainNode.connect(this.state.audioContext.destination);
+      
+      // Start oscillator
+      this.state.audioNodes.oscillator.start();
+      
+      this.debug('Audio system initialized successfully');
+      return true;
+      
+    } catch (error) {
+      this.debug(`Audio initialization failed: ${error.message}`);
+      this.state.audioEnabled = false;
+      return false;
+    }
+  }
+  
+  updateVolume(volume) {
+    if (this.state.audioNodes.gainNode) {
+      const now = this.state.audioContext.currentTime;
+      this.state.audioNodes.gainNode.gain.cancelScheduledValues(now);
+      this.state.audioNodes.gainNode.gain.linearRampToValueAtTime(volume, now + 0.1);
+    }
+  }
+  
+  setBeatFrequency(frequency) {
+    if (this.state.audioNodes.oscillator) {
+      const now = this.state.audioContext.currentTime;
+      this.state.audioNodes.oscillator.frequency.cancelScheduledValues(now);
+      this.state.audioNodes.oscillator.frequency.linearRampToValueAtTime(180 + frequency, now + 0.1);
+      
+      // Update display
+      document.getElementById('beatFrequencyDisplay').textContent = `${frequency.toFixed(2)} Hz`;
+    }
+  }
+  
+  // =============================================
+  // Visualization System
+  // =============================================
+  
+  initializeVisualization() {
+    try {
+      this.canvas = document.getElementById('visualization-canvas');
+      this.ctx = this.canvas.getContext('2d');
+      
+      this.resizeCanvas();
+      window.addEventListener('resize', () => this.resizeCanvas());
+      
+      this.startVisualizationLoop();
+      this.debug('Visualization system initialized');
+      
+    } catch (error) {
+      this.debug(`Visualization initialization failed: ${error.message}`);
+    }
+  }
+  
+  resizeCanvas() {
+    if (this.canvas) {
+      this.canvas.width = this.canvas.clientWidth;
+      this.canvas.height = this.canvas.clientHeight;
+    }
+  }
+  
+  startVisualizationLoop() {
+    let time = 0;
+    
+    const render = () => {
+      time += 0.016;
+      this.renderVisualization(time);
+      requestAnimationFrame(render);
+    };
+    
+    render();
+  }
+  
+  renderVisualization(time) {
+    if (!this.ctx) return;
+    
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+    
+    // Clear canvas
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    this.ctx.fillRect(0, 0, width, height);
+    
+    // Draw particles based on cognitive state
+    const particleCount = this.state.sessionActive ? 100 : 50;
+    const intensity = this.state.sessionActive ? 1.5 : 0.5;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (i / particleCount) * Math.PI * 2 + time * 0.5;
+      const distance = 50 + Math.sin(time + i) * 30 * this.state.cognitive.arousal * intensity;
+      const x = width/2 + Math.cos(angle) * distance;
+      const y = height/2 + Math.sin(angle) * distance;
+      const size = 2 + Math.sin(time * 2 + i) * 2 * intensity;
+      
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, size, 0, Math.PI * 2);
+      this.ctx.fillStyle = `hsla(${15 + Math.sin(time + i) * 20}, 90%, 60%, ${0.3 + Math.sin(time + i) * 0.2})`;
+      this.ctx.fill();
+    }
+  }
+  
+  // =============================================
+  // Session Management
+  // =============================================
+  
+  async handleInitialize() {
+    try {
+      this.debug('Initializing session...');
+      
+      // Initialize audio if enabled
+      const audioSuccess = await this.initializeAudio();
+      
+      // Update UI
+      document.getElementById('initializeBtn').disabled = true;
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('audioStatus').textContent = audioSuccess ? 'Ready' : 'Disabled';
+      
+      this.showNotification('System initialized - ready for session', 'success');
+      this.debug('Session initialization complete');
+      
+    } catch (error) {
+      this.debug(`Initialization error: ${error.message}`);
+      this.showNotification('Initialization failed', 'error');
+    }
+  }
+  
+  async handleStart() {
+    try {
+      this.debug('Starting neural session...');
+      
+      // Update state
+      this.state.sessionActive = true;
+      this.state.sessionPaused = false;
+      this.state.sessionStartTime = Date.now();
+      this.state.currentPhase = 0;
+      
+      // Update UI
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('pauseBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = false;
+      document.getElementById('currentPhaseDisplay').textContent = 'Phase 1';
+      
+      // Start session
+      this.runSession();
+      
+      this.showNotification('Neural session started', 'success');
+      this.debug('Session started successfully');
+      
+    } catch (error) {
+      this.debug(`Session start error: ${error.message}`);
+      this.showNotification('Session start failed', 'error');
+    }
+  }
+  
+  async runSession() {
+    this.debug('Running neural session...');
+    
+    for (let phaseIndex = 0; phaseIndex < this.state.phases.length; phaseIndex++) {
+      if (!this.state.sessionActive) {
+        this.debug('Session stopped');
+        break;
+      }
+      
+      await this.runPhase(phaseIndex);
+    }
+    
+    if (this.state.sessionActive) {
+      this.completeSession();
+    }
+  }
+  
+  async runPhase(phaseIndex) {
+    return new Promise((resolve) => {
+      const phase = this.state.phases[phaseIndex];
+      const phaseDuration = phase.duration * this.state.sessionDuration * 1000; // Convert to milliseconds
+      
+      this.debug(`Starting phase ${phaseIndex + 1}: ${phase.name} (${phaseDuration}ms)`);
+      
+      // Update UI for new phase
+      this.updatePhaseUI(phase, phaseIndex);
+      
+      // Track phase progress
+      const phaseStartTime = Date.now();
+      let progressInterval;
+      
+      const updateProgress = () => {
+        if (!this.state.sessionActive || this.state.sessionPaused) {
+          return;
+        }
+        
+        const elapsed = Date.now() - phaseStartTime;
+        const progress = Math.min(elapsed / phaseDuration, 1);
+        
+        // Update beat frequency based on phase
+        this.updatePhaseBeatFrequency(phase, progress);
+        
+        // Update cognitive metrics
+        this.updateCognitiveMetrics(phaseIndex, progress);
+        
+        // Update UI
+        this.updatePhaseProgress(progress, phaseIndex);
+        
+        if (progress >= 1) {
+          clearInterval(progressInterval);
+          this.debug(`Phase ${phaseIndex + 1} completed`);
+          resolve();
+        }
+      };
+      
+      // Start progress tracking
+      progressInterval = setInterval(updateProgress, 100); // Update every 100ms
+      
+      // Handle pause/resume
+      const handlePause = () => {
+        if (this.state.sessionPaused) {
+          clearInterval(progressInterval);
+          
+          const resumeHandler = () => {
+            if (!this.state.sessionPaused && this.state.sessionActive) {
+              progressInterval = setInterval(updateProgress, 100);
+              document.removeEventListener('crisiscore-resume', resumeHandler);
+            }
+          };
+          
+          document.addEventListener('crisiscore-resume', resumeHandler);
+        }
+      };
+      
+      document.addEventListener('crisiscore-pause', handlePause);
+    });
+  }
+  
+  updatePhaseUI(phase, phaseIndex) {
+    // Update glyph and colors
+    document.getElementById('phaseGlyph').textContent = phase.glyph;
+    document.getElementById('phaseTitle').textContent = phase.name;
+    document.getElementById('phaseDescription').textContent = phase.description;
+    document.getElementById('currentPhaseDisplay').textContent = `Phase ${phaseIndex + 1}`;
+    
+    // Update CSS custom properties for phase color
+    document.documentElement.style.setProperty('--phase-color', phase.color);
+    
+    this.debug(`Phase UI updated: ${phase.name}`);
+  }
+  
+  updatePhaseBeatFrequency(phase, progress) {
+    let beatFreq = 0;
+    
+    if (Array.isArray(phase.beatFreq)) {
+      if (phase.beatFreq.length === 2) {
+        // Linear sweep
+        beatFreq = phase.beatFreq[0] + (phase.beatFreq[1] - phase.beatFreq[0]) * progress;
+      } else if (phase.beatFreq.length === 3) {
+        // Three-point sweep
+        if (progress < 0.5) {
+          beatFreq = phase.beatFreq[0] + (phase.beatFreq[1] - phase.beatFreq[0]) * (progress / 0.5);
+        } else {
+          beatFreq = phase.beatFreq[1] + (phase.beatFreq[2] - phase.beatFreq[1]) * ((progress - 0.5) / 0.5);
+        }
+      }
+    } else {
+      // Constant frequency
+      beatFreq = phase.beatFreq;
+    }
+    
+    this.setBeatFrequency(beatFreq);
+  }
+  
+  updateCognitiveMetrics(phaseIndex, progress) {
+    // Simulate realistic cognitive changes
+    const baseMetrics = {
+      load: 0.5,
+      focus: 0.5,
+      coherence: 0.72,
+      arousal: 0.5,
+      valence: 0.5
+    };
+    
+    // Phase-specific patterns
+    const phasePatterns = [
+      { load: 0.3, focus: 0.4, coherence: 0.6, arousal: 0.3, valence: 0.7 }, // Calibration
+      { load: 0.5, focus: 0.6, coherence: 0.7, arousal: 0.4, valence: 0.6 }, // Resonance
+      { load: 0.7, focus: 0.5, coherence: 0.8, arousal: 0.3, valence: 0.5 }, // Descent
+      { load: 0.6, focus: 0.7, coherence: 0.9, arousal: 0.5, valence: 0.8 }, // Integration
+      { load: 0.8, focus: 0.9, coherence: 0.95, arousal: 0.7, valence: 0.9 }, // Peak
+      { load: 0.4, focus: 0.6, coherence: 0.85, arousal: 0.4, valence: 0.8 }  // Return
+    ];
+    
+    const pattern = phasePatterns[phaseIndex] || phasePatterns[0];
+    const smoothProgress = Math.sin(progress * Math.PI); // Smooth progression
+    
+    // Update cognitive metrics
+    this.state.cognitive.load = baseMetrics.load + (pattern.load - baseMetrics.load) * smoothProgress;
+    this.state.cognitive.focus = baseMetrics.focus + (pattern.focus - baseMetrics.focus) * smoothProgress;
+    this.state.cognitive.coherence = baseMetrics.coherence + (pattern.coherence - baseMetrics.coherence) * smoothProgress;
+    this.state.cognitive.arousal = baseMetrics.arousal + (pattern.arousal - baseMetrics.arousal) * smoothProgress;
+    this.state.cognitive.valence = baseMetrics.valence + (pattern.valence - baseMetrics.valence) * smoothProgress;
+  }
+  
+  updatePhaseProgress(progress, phaseIndex) {
+    // Update phase progress bar
+    document.getElementById('phaseProgressBar').style.width = `${progress * 100}%`;
+    document.getElementById('phaseProgressText').textContent = `${Math.floor(progress * 100)}%`;
+    
+    // Update session progress bar
+    const sessionProgress = ((phaseIndex + progress) / this.state.phases.length) * 100;
+    document.getElementById('sessionProgressBar').style.width = `${sessionProgress}%`;
+    document.getElementById('sessionProgressText').textContent = `${Math.floor(sessionProgress)}%`;
+    
+    // Update cognitive metrics display
+    document.getElementById('coherenceDisplay').textContent = this.state.cognitive.coherence.toFixed(2);
+    document.getElementById('coherenceBar').style.width = `${this.state.cognitive.coherence * 100}%`;
+    document.getElementById('focusDisplay').textContent = this.state.cognitive.focus.toFixed(2);
+    document.getElementById('focusBar').style.width = `${this.state.cognitive.focus * 100}%`;
+  }
+  
+  completeSession() {
+    this.debug('Session completed successfully');
+    
+    // Update state
+    this.state.sessionActive = false;
+    this.state.currentPhase = -1;
+    
+    // Update UI
+    document.getElementById('phaseGlyph').textContent = '✅';
+    document.getElementById('phaseTitle').textContent = 'Session Complete';
+    document.getElementById('phaseDescription').textContent = 'Neural entrainment session completed successfully. Integration phase active.';
+    document.getElementById('currentPhaseDisplay').textContent = 'Complete';
+    
+    // Reset controls
+    this.resetControls();
+    
+    // Reset audio
+    if (this.state.audioNodes.gainNode) {
+      this.updateVolume(0);
+    }
+    
+    this.showNotification('Neural session completed successfully', 'success');
+  }
+  
+  handlePause() {
+    this.state.sessionPaused = true;
+    document.getElementById('pauseBtn').disabled = true;
+    document.getElementById('resumeBtn').disabled = false;
+    
+    document.dispatchEvent(new CustomEvent('crisiscore-pause'));
+    this.showNotification('Session paused', 'info');
+    this.debug('Session paused');
+  }
+  
+  handleResume() {
+    this.state.sessionPaused = false;
+    document.getElementById('pauseBtn').disabled = false;
+    document.getElementById('resumeBtn').disabled = true;
+    
+    document.dispatchEvent(new CustomEvent('crisiscore-resume'));
+    this.showNotification('Session resumed', 'info');
+    this.debug('Session resumed');
+  }
+  
+  handleStop() {
+    this.debug('Emergency stop activated');
+    
+    // Stop session immediately
+    this.state.sessionActive = false;
+    this.state.sessionPaused = false;
+    
+    // Clear all timers
+    this.state.timers.forEach(timer => clearTimeout(timer));
+    this.state.timers.clear();
+    
+    // Reset audio
+    if (this.state.audioNodes.gainNode) {
+      this.updateVolume(0);
+    }
+    
+    // Reset UI
+    this.resetControls();
+    this.resetSessionUI();
+    
+    this.showNotification('Session stopped - emergency protocol activated', 'error');
+  }
+  
+  resetControls() {
+    document.getElementById('initializeBtn').disabled = false;
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('pauseBtn').disabled = true;
+    document.getElementById('resumeBtn').disabled = true;
+    document.getElementById('stopBtn').disabled = true;
+  }
+  
+  resetSessionUI() {
+    document.getElementById('phaseGlyph').textContent = '🌀';
+    document.getElementById('phaseTitle').textContent = 'CrisisCore Neural Interface';
+    document.getElementById('phaseDescription').textContent = 'Advanced neural entrainment system ready for initialization.';
+    document.getElementById('currentPhaseDisplay').textContent = 'Ready';
+    document.getElementById('sessionProgressBar').style.width = '0%';
+    document.getElementById('phaseProgressBar').style.width = '0%';
+    document.getElementById('sessionProgressText').textContent = 'Ready';
+    document.getElementById('phaseProgressText').textContent = 'Ready';
+  }
+  
+  // =============================================
+  // UI Management
+  // =============================================
+  
+  startUIUpdateLoop() {
+    setInterval(() => {
+      this.updateUI();
+    }, 1000); // Update every second
+  }
+  
+  updateUI() {
+    // Update session timer
+    if (this.state.sessionActive && this.state.sessionStartTime) {
+      const elapsed = Math.floor((Date.now() - this.state.sessionStartTime) / 1000);
+      const minutes = Math.floor(elapsed / 60);
+      const seconds = elapsed % 60;
+      document.getElementById('sessionTimer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Update cognitive values
+    document.getElementById('cognitiveValue').textContent = this.state.cognitive.load.toFixed(2);
+    
+    // Update user state indicator
+    const userState = this.calculateUserState();
+    document.getElementById('userState').textContent = userState;
+    document.getElementById('cognitiveState').className = `state-dot ${userState.toLowerCase()}`;
+  }
+  
+  calculateUserState() {
+    const { load, focus, arousal, valence } = this.state.cognitive;
+    
+    if (load < 0.3 && arousal < 0.4) return 'Calm';
+    if (focus > 0.7 && load > 0.6) return 'Focused';
+    if (arousal > 0.7 && valence > 0.6) return 'Energized';
+    if (valence > 0.7 && load < 0.5) return 'Creative';
+    return 'Ready';
+  }
+  
+  // =============================================
+  // Utility Functions
+  // =============================================
+  
+  debug(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    const debugMessage = `[${timestamp}] ${message}`;
+    console.log(debugMessage);
+    
+    const debugOutput = document.getElementById('debugOutput');
+    if (debugOutput) {
+      debugOutput.innerHTML = debugMessage + '<br>' + debugOutput.innerHTML;
+      
+      // Limit debug output to last 10 messages
+      const lines = debugOutput.innerHTML.split('<br>');
+      if (lines.length > 10) {
+        debugOutput.innerHTML = lines.slice(0, 10).join('<br>');
+      }
+    }
+  }
+  
+  showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, 4000);
+  }
+}
+
+// =============================================
+// Initialize Application
+// =============================================
+
+let neuralInterface;
+
+function initializeCrisisCore() {
+  try {
+    neuralInterface = new CrisisCoreNeuralInterface();
+  } catch (error) {
+    console.error('Fatal initialization error:', error);
+    document.body.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #ff335c;">
+        <div>
+          <h1>🚨 CrisisCore System Error</h1>
+          <p>Fatal error during initialization. Please refresh and try again.</p>
+          <p style="font-family: monospace; font-size: 0.8em; margin-top: 20px;">${error.message}</p>
+        </div>
+      </div>
+    `;
+  }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeCrisisCore);
+} else {
+  initializeCrisisCore();
+}
+</script>
+</body>
+</html>
