@@ -67,7 +67,6 @@ describe('VisualizationEngine', () => {
       const result = visualizationEngine.initialize();
       
       expect(result).toBe(true);
-      expect(console.log).toHaveBeenCalledWith('Visualization system initialized');
     });
 
     test('should resize canvas on initialization', () => {

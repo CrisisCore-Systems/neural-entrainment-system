@@ -79,30 +79,32 @@ describe('AudioEngine', () => {
     });
 
     test('should handle initialization errors gracefully', async () => {
+      // Save original mock
+      const originalAudioContext = global.AudioContext;
+      const originalWindowAudioContext = window.AudioContext;
+      
       // Mock AudioContext to throw error
-      global.AudioContext = jest.fn().mockImplementation(() => {
+      const throwingMock = jest.fn().mockImplementation(() => {
         throw new Error('Web Audio not supported');
       });
+      global.AudioContext = throwingMock;
+      window.AudioContext = throwingMock;
 
       const result = await audioEngine.initialize();
 
       expect(result).toBe(false);
       expect(audioEngine.isInitialized).toBe(false);
       expect(audioEngine.isEnabled).toBe(false);
+      
+      // Restore original mocks
+      global.AudioContext = originalAudioContext;
+      window.AudioContext = originalWindowAudioContext;
     });
   });
 
   describe('setVolume()', () => {
     beforeEach(async () => {
       await audioEngine.initialize();
-      // Don't clear mocks here - we need the mock implementations to persist
-      // Just clear the call history for specific mocks if needed
-      if (audioEngine.gainNode && audioEngine.gainNode.gain) {
-        if (audioEngine.gainNode.gain.cancelScheduledValues.mockClear) {
-          audioEngine.gainNode.gain.cancelScheduledValues.mockClear();
-          audioEngine.gainNode.gain.linearRampToValueAtTime.mockClear();
-        }
-      }
     });
 
     test('should set volume within valid range', () => {
@@ -143,14 +145,6 @@ describe('AudioEngine', () => {
   describe('setBeatFrequency()', () => {
     beforeEach(async () => {
       await audioEngine.initialize();
-      // Don't clear mocks here - we need the mock implementations to persist
-      // Just clear the call history for specific mocks if needed
-      if (audioEngine.oscillator && audioEngine.oscillator.frequency) {
-        if (audioEngine.oscillator.frequency.cancelScheduledValues.mockClear) {
-          audioEngine.oscillator.frequency.cancelScheduledValues.mockClear();
-          audioEngine.oscillator.frequency.linearRampToValueAtTime.mockClear();
-        }
-      }
     });
 
     test('should set beat frequency within valid range', () => {
