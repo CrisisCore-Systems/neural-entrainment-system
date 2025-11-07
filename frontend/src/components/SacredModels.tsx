@@ -79,7 +79,10 @@ export function SacredModel(props: ModelProps) {
 
 // Convenience wrappers (can be customized per shape)
 export const ModelSeedOfLife = (p: Partial<ModelProps>) => (
-  <SacredModel url={p.url ?? '/models/seed-of-life.glb'} scale={p.scale ?? 1.4} position={p.position ?? [0,0,0]} color={p.color} fallback={p.fallback} />
+  <SacredModel url={p.url ?? '/models/seed_of_life.glb'} scale={p.scale ?? 1.4} position={p.position ?? [0,0,0]} color={p.color} fallback={p.fallback} />
+);
+export const ModelTreeOfLife = (p: Partial<ModelProps>) => (
+  <SacredModel url={p.url ?? '/models/tree_of_life.glb'} scale={p.scale ?? 1.5} position={p.position ?? [0,0,0]} color={p.color} fallback={p.fallback} />
 );
 export const ModelFlowerOfLife = (p: Partial<ModelProps>) => (
   <SacredModel url={p.url ?? '/models/flower-of-life.glb'} scale={p.scale ?? 1.8} position={p.position ?? [0,0,0]} color={p.color} fallback={p.fallback} />
@@ -97,7 +100,8 @@ export const ModelMerkaba = (p: Partial<ModelProps>) => (
   <SacredModel url={p.url ?? '/models/merkaba.glb'} scale={p.scale ?? 1.6} position={p.position ?? [0,0,0]} color={p.color} fallback={p.fallback} />
 );
 
-useGLTF.preload('/models/seed-of-life.glb');
+useGLTF.preload('/models/seed_of_life.glb');
+useGLTF.preload('/models/tree_of_life.glb');
 useGLTF.preload('/models/flower-of-life.glb');
 useGLTF.preload('/models/fibonacci-spiral.glb');
 useGLTF.preload('/models/metatrons-cube.glb');
