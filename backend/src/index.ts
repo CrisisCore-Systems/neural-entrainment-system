@@ -3,7 +3,7 @@
  * CrisisCore Neural Interface Backend
  */
 
-import Fastify from 'fastify';
+import Fastify, { FastifyBaseLogger } from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -21,7 +21,7 @@ import { userRoutes } from './routes/users.js';
 
 // Initialize Fastify with logger
 const fastify = Fastify({
-  logger: logger as any,
+  logger: logger as FastifyBaseLogger,
   trustProxy: true,
 });
 

@@ -73,7 +73,7 @@ describe('AudioEngine', () => {
 
   beforeEach(() => {
     // Mock global AudioContext
-    global.AudioContext = MockAudioContext as any;
+    global.AudioContext = MockAudioContext as unknown as typeof AudioContext;
     audioEngine = new AudioEngine();
   });
 

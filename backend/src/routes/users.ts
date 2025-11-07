@@ -47,7 +47,7 @@ export const userRoutes: FastifyPluginAsync = (fastify) => {
     async (request, reply) => {
       try {
         const decoded = (await request.jwtVerify()) as { userId: string };
-        const preferences = request.body as Record<string, any>;
+        const preferences = request.body as Record<string, unknown>;
 
         // Build dynamic update query
         const fields = Object.keys(preferences);

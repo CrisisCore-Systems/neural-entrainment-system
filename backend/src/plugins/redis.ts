@@ -81,7 +81,7 @@ const redisPlugin: FastifyPluginAsync = async (fastify) => {
   // If disabled by feature flag, use in-memory cache
   if (config.features.disableRedis) {
     fastify.log.warn('Redis disabled via DISABLE_REDIS=true (using in-memory cache)');
-    (fastify as any).decorate('redis', inMemoryCache as any);
+    fastify.decorate('redis', inMemoryCache);
     return;
   }
 
@@ -105,13 +105,13 @@ const redisPlugin: FastifyPluginAsync = async (fastify) => {
 
   if (!reachable) {
     fastify.log.warn(`Redis not reachable at ${host}:${port}, using in-memory cache`);
-    (fastify as any).decorate('redis', inMemoryCache as any);
+    fastify.decorate('redis', inMemoryCache);
     return;
   }
 
   // Register @fastify/redis with lazy connect to avoid blocking startup
   try {
-    const opts = targetUrl
+    const opts: FastifyRedisPluginOptions = targetUrl
       ? { url: config.redis.url, lazyConnect: true, connectTimeout: 1000, maxRetriesPerRequest: 0 }
       : {
           host: config.redis.host,
@@ -120,12 +120,12 @@ const redisPlugin: FastifyPluginAsync = async (fastify) => {
           connectTimeout: 1000,
           maxRetriesPerRequest: 0,
         };
-    await fastify.register(fastifyRedis, opts as any);
+    await fastify.register(fastifyRedis, opts);
     fastify.log.info(`Redis enabled (lazy connect) at ${host}:${port}`);
   } catch (err) {
     fastify.log.warn('Redis plugin registration failed, falling back to in-memory cache');
     fastify.log.debug({ err }, 'Redis registration error');
-    (fastify as any).decorate('redis', inMemoryCache as any);
+    fastify.decorate('redis', inMemoryCache);
   }
 };
 

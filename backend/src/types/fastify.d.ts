@@ -4,6 +4,7 @@
  */
 
 import { PostgresDb } from '@fastify/postgres';
+import { FastifyRequest, FastifyReply } from 'fastify';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -15,6 +16,6 @@ declare module 'fastify' {
       del(key: string): Promise<void>;
       ping(): Promise<string>;
     };
-    authenticate: (request: any, reply: any) => Promise<void>;
+    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }
