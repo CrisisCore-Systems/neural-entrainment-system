@@ -368,9 +368,9 @@ chore: update dependencies
 
 ## Testing
 
-### Backend Tests
+### Backend Tests (70+ Passing ✅)
 
-**Framework**: Vitest with Web Audio API mocks
+**Framework**: Vitest with comprehensive mocking
 
 ```bash
 cd backend
@@ -381,31 +381,84 @@ npm test
 # Run tests once (CI mode)
 npm run test:run
 
+# Run with coverage
+npx vitest --coverage
+
 # Run specific test file
-npx vitest run src/__tests__/audioEngine.test.ts
+npx vitest run src/__tests__/routes/auth.test.ts
+```
+
+**Test Coverage:**
+- ✅ **Auth routes** (24 tests): Registration, login, validation, password security, medical disclaimers
+- ✅ **Session routes** (25 tests): Session creation, metrics validation, ownership checks, state transitions
+- ✅ **Protocol routes** (11 tests): Data validation, filtering, sorting, lookup functions
+- ✅ **Audio engine** (8 tests): Frequency validation (20Hz-20kHz), volume validation (0-1)
+- ✅ **Basic config** (2 tests): Environment and math sanity checks
+
+**Test Files:**
+- `backend/src/__tests__/routes/auth.test.ts` - Auth business logic
+- `backend/src/__tests__/routes/sessions.test.ts` - Session management logic
+- `backend/src/__tests__/routes/protocols.test.ts` - Protocol validation
+- `backend/src/__tests__/audioEngine.test.ts` - Audio engine validation
+- `backend/src/__tests__/basic.test.ts` - Basic configuration
+
+**Writing New Tests:**
+```typescript
+// Example test structure
+import { describe, it, expect } from 'vitest';
+
+describe('Feature Name', () => {
+  it('should handle valid input', () => {
+    const result = myFunction(validInput);
+    expect(result).toBe(expectedOutput);
+  });
+  
+  it('should reject invalid input', () => {
+    expect(() => myFunction(invalidInput)).toThrow('Error message');
+  });
+});
+```
+
+### Frontend Tests (17+ Passing ✅)
+
+**Framework**: Vitest + React Testing Library
+
+```bash
+cd frontend
+
+# Run tests in watch mode
+npm test
+
+# Run tests once
+npm run test:run
+
+# Run with UI
+npm run test:ui
 
 # Coverage report
 npm run test:coverage
 ```
 
-**Current test suite:**
-- ✅ Audio engine frequency validation (20Hz-20kHz)
-- ✅ Volume validation (0-1 range)
-- ✅ Boundary testing
-- ✅ Basic configuration tests
+**Test Coverage:**
+- ✅ **Auth component** (17 tests): Login, registration, validation, error handling, loading states
+- More component tests coming soon
 
-### Frontend Testing
+**Test Files:**
+- `frontend/src/test/Auth.test.tsx` - Authentication component
+- `frontend/src/test/setup.ts` - Test configuration with Web Audio + WebGL mocks
 
-Currently manual testing. Automated testing coming soon.
+**Writing Component Tests:**
+```typescript
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MyComponent } from '../components/MyComponent';
 
-**Manual Test Checklist:**
-- [ ] Login/logout functionality
-- [ ] Protocol selection and session start
-- [ ] Audio plays correctly
-- [ ] Visual effects render
-- [ ] Session controls (play/pause/stop)
-- [ ] Gateway protocols unlock properly
-- [ ] Analytics display correctly
+it('should render and handle click', () => {
+  render(<MyComponent />);
+  const button = screen.getByRole('button');
+  fireEvent.click(button);
+  expect(screen.getByText('Clicked')).toBeInTheDocument();
+});
+```
 
 ### Integration Testing
 
@@ -423,6 +476,36 @@ curl -X POST http://localhost:3001/api/auth/login \
   -d '{"email":"test@example.com","password":"password123"}'
 ```
 
+### Manual Testing Checklist
+
+**Authentication:**
+- [ ] Login with valid credentials
+- [ ] Login with invalid credentials shows error
+- [ ] Registration requires medical disclaimer
+- [ ] Password strength indicator works
+- [ ] Logout clears session
+
+**Session Management:**
+- [ ] Protocol selection loads correctly
+- [ ] Session starts with audio playing
+- [ ] Visual effects synchronize with audio
+- [ ] Session controls work (play/pause/stop)
+- [ ] Session metrics save correctly
+- [ ] Gateway protocols unlock after 10 standard sessions
+
+**Audio/Visual:**
+- [ ] Binaural beats audible in headphones
+- [ ] Volume controls work
+- [ ] Emergency stop immediately halts audio
+- [ ] Visual patterns render smoothly (60 FPS)
+- [ ] No audio/visual desync (<5ms tolerance)
+
+### Test Coverage Goals
+
+- **Backend**: Target 80% coverage for business logic
+- **Frontend**: Target 70% coverage for components
+- **Critical paths**: 100% coverage (auth, session safety, audio limits)
+
 ---
 
 ## Deployment
@@ -431,12 +514,14 @@ curl -X POST http://localhost:3001/api/auth/login \
 
 ✅ **Before deploying:**
 1. Run `npm run quality` in backend (0 errors, 0 warnings)
-2. Run `npm run build` in frontend (successful build)
-3. Test locally with production builds
-4. Update environment variables
-5. Run database migrations on production
-6. Test API endpoints
-7. Monitor logs for errors
+2. Run `npm test` in backend (all tests passing)
+3. Run `npm run test:run` in frontend (all tests passing)
+4. Run `npm run build` in frontend (successful build)
+5. Test locally with production builds
+6. Update environment variables
+7. Run database migrations on production
+8. Test API endpoints
+9. Monitor logs for errors
 
 ### Quick Deployment Guide
 
