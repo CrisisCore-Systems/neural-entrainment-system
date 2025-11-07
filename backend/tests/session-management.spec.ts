@@ -5,9 +5,9 @@ test.describe('Session Management', () => {
     // Login and select a protocol
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // Select first protocol
@@ -257,3 +257,5 @@ test.describe('Session Management', () => {
     await expect(page.locator('.error-message, [role="alert"]').filter({ hasText: /audio|error/i })).toBeVisible({ timeout: 3000 });
   });
 });
+
+

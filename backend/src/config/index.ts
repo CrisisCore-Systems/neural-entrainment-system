@@ -3,8 +3,11 @@
  */
 
 import { config as dotenvConfig } from 'dotenv';
+import path from 'path';
 
-dotenvConfig();
+// Load environment-specific .env file
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+dotenvConfig({ path: path.resolve(process.cwd(), envFile) });
 
 export const config = {
   env: process.env.NODE_ENV || 'development',

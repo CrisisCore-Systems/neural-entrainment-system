@@ -7,9 +7,9 @@ test.describe('Authentication Flow', () => {
 
   test('should display login form on initial load', async ({ page }) => {
     // Check for Auth component elements
-    await expect(page.locator('h1')).toContainText(/Neural Entrainment|Login/i);
+    await expect(page.locator('h1')).toContainText(/CrisisCore Neural Interface/i);
     await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /password/i })).toBeVisible();
+    await expect(page.getByPlaceholder('Enter your password')).toBeVisible();
     await expect(page.getByRole('button', { name: /login|sign in/i })).toBeVisible();
   });
 
@@ -27,7 +27,7 @@ test.describe('Authentication Flow', () => {
   test('should show error for invalid credentials', async ({ page }) => {
     // Fill in invalid credentials
     await page.getByRole('textbox', { name: /email/i }).fill('invalid@example.com');
-    await page.getByLabel(/password/i).fill('wrongpassword');
+    await page.getByPlaceholder('Enter your password').fill('wrongpassword');
     await page.getByRole('button', { name: /login|sign in/i }).click();
     
     // Wait for error message (adjust selector based on actual implementation)
@@ -37,14 +37,14 @@ test.describe('Authentication Flow', () => {
   test('should successfully login with valid credentials', async ({ page }) => {
     // Fill in valid credentials (use test account)
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    
-    // Wait for navigation to dashboard (adjust based on actual route)
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
-    
-    // Verify logged in state - should see protocol selector or dashboard
-    await expect(page.locator('h1, h2')).toContainText(/protocols|dashboard|neural/i, { timeout: 5000 });
+
+    // Wait for authentication - app shows protocol selector after login
+    await expect(page.locator('.app-header, .protocol-selector, h2')).toBeVisible({ timeout: 5000 });
+
+    // Verify logged in state - should see protocol selector or navigation
+    await expect(page.locator('body')).toContainText(/protocols|logout/i, { timeout: 5000 });
   });
 
   test('should toggle between login and signup modes', async ({ page }) => {
@@ -62,10 +62,10 @@ test.describe('Authentication Flow', () => {
   test('should logout successfully', async ({ page }) => {
     // Login first
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
     
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     
     // Find and click logout button (might be in menu or header)
     const logoutButton = page.locator('button, a').filter({ hasText: /logout|sign out/i }).first();
@@ -78,10 +78,10 @@ test.describe('Authentication Flow', () => {
   test('should persist session after page reload', async ({ page }) => {
     // Login
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
     
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     
     // Reload page
     await page.reload();
@@ -95,10 +95,12 @@ test.describe('Authentication Flow', () => {
     await page.route('**/api/auth/login', route => route.abort());
     
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
     
     // Should show network error message
     await expect(page.locator('.error-message, .auth-error, [role="alert"]')).toBeVisible({ timeout: 3000 });
   });
 });
+
+

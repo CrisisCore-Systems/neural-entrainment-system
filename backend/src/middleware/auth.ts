@@ -12,7 +12,7 @@ declare module 'fastify' {
   }
 }
 
-function authMiddleware(fastify: FastifyInstance) {
+async function authMiddleware(fastify: FastifyInstance) {
   fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       await request.jwtVerify();
@@ -22,4 +22,7 @@ function authMiddleware(fastify: FastifyInstance) {
   });
 }
 
-export default fp(authMiddleware);
+export default fp(authMiddleware, {
+  name: 'auth-middleware',
+  dependencies: ['@fastify/jwt'],
+});

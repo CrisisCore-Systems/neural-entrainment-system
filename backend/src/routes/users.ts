@@ -5,7 +5,7 @@
 
 import { FastifyPluginAsync } from 'fastify';
 
-export const userRoutes: FastifyPluginAsync = (fastify) => {
+export const userRoutes: FastifyPluginAsync = async (fastify) => {
   /**
    * GET /api/users/preferences
    * Get user preferences

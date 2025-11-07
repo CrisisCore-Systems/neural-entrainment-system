@@ -1,13 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { loginAsTestUser } from './helpers';
 
 test.describe('Protocol Selection', () => {
   test.beforeEach(async ({ page }) => {
-    // Login first
-    await page.goto('/');
-    await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
-    await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    await loginAsTestUser(page);
   });
 
   test('should display protocol list after login', async ({ page }) => {
@@ -176,3 +172,5 @@ test.describe('Protocol Selection', () => {
     }
   });
 });
+
+

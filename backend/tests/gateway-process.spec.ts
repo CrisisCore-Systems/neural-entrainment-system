@@ -5,9 +5,9 @@ test.describe('Gateway Process (Admin Only)', () => {
     // Login as admin user
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('admin@example.com'); // Admin account
-    await page.getByLabel(/password/i).fill('Admin123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Admin123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
   });
 
@@ -210,9 +210,9 @@ test.describe('Gateway Process (Admin Only)', () => {
     
     // Login as regular user
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // Gateway tile should NOT be visible
@@ -239,3 +239,5 @@ test.describe('Gateway Process (Admin Only)', () => {
     await expect(stopConfirmation).toBeVisible({ timeout: 5000 });
   });
 });
+
+

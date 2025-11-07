@@ -8,11 +8,11 @@ test.describe('Complete User Journey', () => {
     // 2. Login
     await expect(page.getByRole('button', { name: /login|sign in/i })).toBeVisible({ timeout: 5000 });
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
     
     // Wait for successful login
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // 3. Browse protocols
@@ -67,9 +67,9 @@ test.describe('Complete User Journey', () => {
     // 1. Login and start session
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // Select protocol and start
@@ -103,9 +103,9 @@ test.describe('Complete User Journey', () => {
     await page.goto('/');
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     
     // Verify layout at desktop size
     await expect(page.locator('.protocol-card, .protocol-item').first()).toBeVisible();
@@ -125,9 +125,9 @@ test.describe('Complete User Journey', () => {
     // Login
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // Rapidly click through protocols
@@ -154,9 +154,9 @@ test.describe('Complete User Journey', () => {
     // Login
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     
     // Note current URL/state
     const currentURL = page.url();
@@ -174,9 +174,9 @@ test.describe('Complete User Journey', () => {
     // Login and trigger multiple simultaneous actions
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // Apply multiple filters/sorts simultaneously
@@ -199,9 +199,9 @@ test.describe('Complete User Journey', () => {
     // Login
     await page.goto('/');
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByLabel(/password/i).fill('Test123!@#');
+    await page.getByPlaceholder('Enter your password').fill('Test123!@#');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|protocols|home)/i, { timeout: 5000 });
+    // URL does not change - single page app
     await page.waitForLoadState('networkidle');
     
     // Check if usage count is displayed
@@ -214,3 +214,5 @@ test.describe('Complete User Journey', () => {
     }
   });
 });
+
+

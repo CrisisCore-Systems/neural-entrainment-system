@@ -5,7 +5,7 @@
 
 import { FastifyPluginAsync } from 'fastify';
 
-export const sessionRoutes: FastifyPluginAsync = (fastify) => {
+export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
   /**
    * GET /api/sessions
    * Get user's session history
