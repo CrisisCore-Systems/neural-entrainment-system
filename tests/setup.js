@@ -4,7 +4,7 @@
  */
 
 // Mock Web Audio API for testing
-global.AudioContext = jest.fn().mockImplementation(() => ({
+const AudioContextMock = jest.fn().mockImplementation(() => ({
   createOscillator: jest.fn().mockReturnValue({
     type: 'sine',
     frequency: {
@@ -31,7 +31,10 @@ global.AudioContext = jest.fn().mockImplementation(() => ({
   close: jest.fn()
 }));
 
-global.webkitAudioContext = global.AudioContext;
+global.AudioContext = AudioContextMock;
+global.webkitAudioContext = AudioContextMock;
+window.AudioContext = AudioContextMock;
+window.webkitAudioContext = AudioContextMock;
 
 // Mock localStorage - need to use defineProperty because jsdom sets up localStorage
 const localStorageInstance = {
