@@ -124,15 +124,20 @@ function App() {
         />
       )}
       {view === 'gateway-session' && selectedGatewayProtocol && (
-        <GatewaySession 
-          protocolId={selectedGatewayProtocol}
-          onExit={() => {
-            console.log('[App] Gateway Session Exit button clicked');
-            setSelectedGatewayProtocol(null);
-            setView('gateway');
-            console.log('[App] View changed back to: gateway');
-          }}
-        />
+        <>
+          {console.log('[App] Rendering GatewaySession component with protocolId:', selectedGatewayProtocol)}
+          {console.log('[App] view state:', view)}
+          {console.log('[App] selectedGatewayProtocol state:', selectedGatewayProtocol)}
+          <GatewaySession 
+            protocolId={selectedGatewayProtocol}
+            onExit={() => {
+              console.log('[App] Gateway Session Exit button clicked');
+              setSelectedGatewayProtocol(null);
+              setView('gateway');
+              console.log('[App] View changed back to: gateway');
+            }}
+          />
+        </>
       )}
     </div>
   )
