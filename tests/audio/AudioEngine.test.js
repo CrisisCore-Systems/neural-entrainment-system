@@ -9,7 +9,8 @@ describe('AudioEngine', () => {
 
   beforeEach(() => {
     audioEngine = new AudioEngine();
-    jest.clearAllMocks();
+    // Don't use jest.clearAllMocks() as it clears mock implementations
+    // Individual mocks will be cleared in nested beforeEach blocks if needed
   });
 
   afterEach(() => {
@@ -94,7 +95,14 @@ describe('AudioEngine', () => {
   describe('setVolume()', () => {
     beforeEach(async () => {
       await audioEngine.initialize();
-      jest.clearAllMocks(); // Clear initialization call mocks
+      // Don't clear mocks here - we need the mock implementations to persist
+      // Just clear the call history for specific mocks if needed
+      if (audioEngine.gainNode && audioEngine.gainNode.gain) {
+        if (audioEngine.gainNode.gain.cancelScheduledValues.mockClear) {
+          audioEngine.gainNode.gain.cancelScheduledValues.mockClear();
+          audioEngine.gainNode.gain.linearRampToValueAtTime.mockClear();
+        }
+      }
     });
 
     test('should set volume within valid range', () => {
@@ -135,7 +143,14 @@ describe('AudioEngine', () => {
   describe('setBeatFrequency()', () => {
     beforeEach(async () => {
       await audioEngine.initialize();
-      jest.clearAllMocks(); // Clear initialization call mocks
+      // Don't clear mocks here - we need the mock implementations to persist
+      // Just clear the call history for specific mocks if needed
+      if (audioEngine.oscillator && audioEngine.oscillator.frequency) {
+        if (audioEngine.oscillator.frequency.cancelScheduledValues.mockClear) {
+          audioEngine.oscillator.frequency.cancelScheduledValues.mockClear();
+          audioEngine.oscillator.frequency.linearRampToValueAtTime.mockClear();
+        }
+      }
     });
 
     test('should set beat frequency within valid range', () => {
