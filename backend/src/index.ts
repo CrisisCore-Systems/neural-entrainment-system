@@ -73,7 +73,7 @@ async function registerPlugins() {
  */
 async function registerRoutes() {
   // Health check
-  fastify.get('/health', async () => {
+  fastify.get('/health', () => {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),

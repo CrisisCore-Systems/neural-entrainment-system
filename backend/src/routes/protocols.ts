@@ -5,7 +5,7 @@
 
 import { FastifyPluginAsync } from 'fastify';
 
-export const protocolRoutes: FastifyPluginAsync = async (fastify) => {
+export const protocolRoutes: FastifyPluginAsync = (fastify) => {
   /**
    * GET /api/protocols
    * Get all public protocols

@@ -23,7 +23,7 @@ const loginSchema = z.object({
   password: z.string(),
 });
 
-export const authRoutes: FastifyPluginAsync = async (fastify) => {
+export const authRoutes: FastifyPluginAsync = (fastify) => {
   /**
    * POST /api/auth/register
    * Register new user

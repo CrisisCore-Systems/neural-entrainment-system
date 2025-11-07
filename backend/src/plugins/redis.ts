@@ -9,7 +9,7 @@ import fastifyRedis from '@fastify/redis';
 import { config } from '../config/index.js';
 import net from 'node:net';
 
-async function probeRedisConnectivity(
+function probeRedisConnectivity(
   host: string,
   port: number,
   timeoutMs = 600
@@ -47,30 +47,33 @@ setInterval(() => {
 
 // In-memory cache implementation
 const inMemoryCache = {
-  async get(key: string): Promise<string | null> {
+  get(key: string): Promise<string | null> {
     const data = memoryCache.get(key);
-    if (!data) return null;
+    if (!data) return Promise.resolve(null);
     if (data.expiry < Date.now()) {
       memoryCache.delete(key);
-      return null;
+      return Promise.resolve(null);
     }
-    return data.value;
+    return Promise.resolve(data.value);
   },
 
-  async set(key: string, value: string): Promise<void> {
+  set(key: string, value: string): Promise<void> {
     memoryCache.set(key, { value, expiry: Date.now() + 86400000 }); // 24 hours default
+    return Promise.resolve();
   },
 
-  async setex(key: string, seconds: number, value: string): Promise<void> {
+  setex(key: string, seconds: number, value: string): Promise<void> {
     memoryCache.set(key, { value, expiry: Date.now() + seconds * 1000 });
+    return Promise.resolve();
   },
 
-  async del(key: string): Promise<void> {
+  del(key: string): Promise<void> {
     memoryCache.delete(key);
+    return Promise.resolve();
   },
 
-  async ping(): Promise<string> {
-    return 'PONG';
+  ping(): Promise<string> {
+    return Promise.resolve('PONG');
   },
 };
 
@@ -91,7 +94,10 @@ const redisPlugin: FastifyPluginAsync = async (fastify) => {
       const u = new URL(targetUrl);
       host = u.hostname || host;
       port = u.port ? parseInt(u.port, 10) : port;
-    } catch {}
+    } catch (error) {
+      // URL parsing failed, use default host/port
+      fastify.log.debug('Failed to parse Redis URL, using default host/port');
+    }
   }
 
   // Quick TCP probe to avoid startup hangs and plugin timeouts

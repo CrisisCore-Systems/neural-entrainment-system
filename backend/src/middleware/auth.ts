@@ -12,7 +12,7 @@ declare module 'fastify' {
   }
 }
 
-async function authMiddleware(fastify: FastifyInstance) {
+function authMiddleware(fastify: FastifyInstance) {
   fastify.decorate('authenticate', async (request: any, reply: any) => {
     try {
       await request.jwtVerify();
