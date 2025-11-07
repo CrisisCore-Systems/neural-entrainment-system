@@ -3,6 +3,8 @@
  * Handles all backend communication
  */
 
+import type { User, AuthResponse, Protocol, Session } from '../types/api';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 interface ApiResponse<T> {
@@ -85,7 +87,7 @@ class ApiClient {
     hasHeartCondition?: boolean;
     hasMentalHealthCondition?: boolean;
   }) {
-    const response = await this.request<{ user: any; token: string }>(
+    const response = await this.request<AuthResponse>(
       '/api/auth/register',
       {
         method: 'POST',
@@ -101,7 +103,7 @@ class ApiClient {
   }
 
   async login(email: string, password: string) {
-    const response = await this.request<{ user: any; token: string }>(
+    const response = await this.request<AuthResponse>(
       '/api/auth/login',
       {
         method: 'POST',
@@ -125,29 +127,29 @@ class ApiClient {
   }
 
   async getCurrentUser() {
-    return this.request<{ user: any }>('/api/auth/me');
+    return this.request<{ user: User }>('/api/auth/me');
   }
 
   /**
    * Protocol endpoints
    */
   async getProtocols() {
-    return this.request<{ protocols: any[] }>('/api/protocols');
+    return this.request<{ protocols: Protocol[] }>('/api/protocols');
   }
 
   async getProtocol(id: string) {
-    return this.request<{ protocol: any }>(`/api/protocols/${id}`);
+    return this.request<{ protocol: Protocol }>(`/api/protocols/${id}`);
   }
 
   /**
    * Session endpoints
    */
   async getSessions() {
-    return this.request<{ sessions: any[] }>('/api/sessions');
+    return this.request<{ sessions: Session[] }>('/api/sessions');
   }
 
   async createSession(protocolId: string) {
-    return this.request<{ session: any }>('/api/sessions', {
+    return this.request<{ session: Session }>('/api/sessions', {
       method: 'POST',
       body: JSON.stringify({ protocolId }),
     });
@@ -165,17 +167,17 @@ class ApiClient {
   }
 
   async getSessionStats() {
-    return this.request<any>('/api/sessions/stats');
+    return this.request<Record<string, unknown>>('/api/sessions/stats');
   }
 
   /**
    * User preferences endpoints
    */
   async getPreferences() {
-    return this.request<{ preferences: any }>('/api/users/preferences');
+    return this.request<{ preferences: Record<string, unknown> }>('/api/users/preferences');
   }
 
-  async updatePreferences(preferences: Record<string, any>) {
+  async updatePreferences(preferences: Record<string, unknown>) {
     return this.request('/api/users/preferences', {
       method: 'PUT',
       body: JSON.stringify(preferences),

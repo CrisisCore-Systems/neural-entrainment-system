@@ -350,7 +350,7 @@ export function generateLSystemFractal(
   
   for (const char of current) {
     switch (char) {
-      case 'F': // Move forward and draw
+      case 'F': { // Move forward and draw
         const newPos = new THREE.Vector3(
           pos.x + Math.cos(dir) * length,
           pos.y + Math.sin(dir) * length,
@@ -364,6 +364,7 @@ export function generateLSystemFractal(
         pos = newPos;
         colorIndex++;
         break;
+      }
       case '+': // Turn right
         dir -= angle * Math.PI / 180;
         break;
@@ -373,13 +374,14 @@ export function generateLSystemFractal(
       case '[': // Push state
         stack.push({ pos: pos.clone(), dir });
         break;
-      case ']': // Pop state
+      case ']': { // Pop state
         const state = stack.pop();
         if (state) {
           pos = state.pos;
           dir = state.dir;
         }
         break;
+      }
     }
   }
   

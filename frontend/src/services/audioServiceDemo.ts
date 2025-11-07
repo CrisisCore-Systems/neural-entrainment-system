@@ -277,7 +277,7 @@ export class AudioDemo {
 
 // Export convenience functions for console testing
 if (typeof window !== 'undefined') {
-  (window as any).audioDemo = {
+  (window as typeof window & { audioDemo: Record<string, () => void> }).audioDemo = {
     sweep: () => AudioDemo.demoFrequencySweep(),
     presets: () => AudioDemo.demoAudioPresets(),
     isochronic: () => AudioDemo.demoIsochronicPulse(),

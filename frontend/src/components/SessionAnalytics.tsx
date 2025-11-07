@@ -66,11 +66,11 @@ export const SessionAnalytics: React.FC = () => {
       if (statsResponse.error) {
         setError(statsResponse.error);
       } else {
-        setStats(statsResponse.data as SessionStats);
+        setStats(statsResponse.data as unknown as SessionStats);
       }
 
       if (!sessionsResponse.error && sessionsResponse.data) {
-        setRecentSessions(sessionsResponse.data.sessions.slice(0, 5));
+        setRecentSessions(sessionsResponse.data.sessions.slice(0, 5) as unknown as Session[]);
       }
     } catch (err) {
       console.error('[SessionAnalytics] Error loading stats:', err);
