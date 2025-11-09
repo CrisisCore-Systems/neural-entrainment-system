@@ -5,6 +5,7 @@ import { Auth } from './components/Auth'
 import { ProtocolSelector } from './components/ProtocolSelector'
 import GatewayDashboard from './components/GatewayDashboard'
 import GatewaySession from './components/GatewaySession'
+import { MonetizationPlanGenerator } from './components/MonetizationPlanGenerator'
 import { useAuthStore } from './store/authStore'
 import './styles/theme.css'
 import './App.css'
@@ -29,7 +30,7 @@ interface Protocol {
 }
 
 function App() {
-  const [view, setView] = useState<'protocols' | 'session' | 'analytics' | 'gateway' | 'gateway-session'>('protocols')
+  const [view, setView] = useState<'protocols' | 'session' | 'analytics' | 'gateway' | 'gateway-session' | 'monetization'>('protocols')
   const [selectedProtocol, setSelectedProtocol] = useState<Protocol | null>(null)
   const [selectedGatewayProtocol, setSelectedGatewayProtocol] = useState<string | null>(null)
   const { isAuthenticated, user, checkAuth, logout } = useAuthStore()
@@ -84,6 +85,12 @@ function App() {
         >
           Analytics
         </button>
+        <button
+          className={view === 'monetization' ? 'active' : ''}
+          onClick={() => setView('monetization')}
+        >
+          💰 Monetization
+        </button>
         {(user?.isAdmin || user?.gatewayAccess) && (
           <button
             className={`gateway-button ${view === 'gateway' ? 'active' : ''}`}
@@ -107,6 +114,9 @@ function App() {
         />
       )}
       {view === 'analytics' && <SessionAnalytics />}
+      {view === 'monetization' && (
+        <MonetizationPlanGenerator onBack={() => setView('protocols')} />
+      )}
       {view === 'gateway' && (
         <GatewayDashboard 
           onExit={() => {
