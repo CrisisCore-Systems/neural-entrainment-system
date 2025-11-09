@@ -5,7 +5,8 @@
 
 import type { User, AuthResponse, Protocol, Session } from '../types/api';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// Prefer explicit VITE_API_URL from Vite env; fall back to test backend port 3002
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3002';
 
 interface ApiResponse<T> {
   data?: T;
@@ -110,7 +111,7 @@ class ApiClient {
         body: JSON.stringify({ email, password }),
       }
     );
-
+    
     if (response.data?.token) {
       this.setToken(response.data.token);
     }
