@@ -84,10 +84,10 @@ export const MonetizationPlanGenerator: React.FC<{ onBack: () => void }> = ({ on
     setSubmitSuccess(false);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const token = localStorage.getItem('token');
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const token = localStorage.getItem('auth_token');
 
-      const response = await fetch(`${apiUrl}/monetization/plans`, {
+      const response = await fetch(`${apiUrl}/api/monetization/plans`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
