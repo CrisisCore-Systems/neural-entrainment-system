@@ -18,6 +18,7 @@ import { authRoutes } from './routes/auth.js';
 import { sessionRoutes } from './routes/sessions.js';
 import { protocolRoutes } from './routes/protocols.js';
 import { userRoutes } from './routes/users.js';
+import { monetizationRoutes } from './routes/monetization.js';
 
 // Initialize Fastify with logger
 const fastify = Fastify({
@@ -86,6 +87,7 @@ async function registerRoutes() {
   await fastify.register(sessionRoutes, { prefix: '/api/sessions' });
   await fastify.register(protocolRoutes, { prefix: '/api/protocols' });
   await fastify.register(userRoutes, { prefix: '/api/users' });
+  await fastify.register(monetizationRoutes, { prefix: '/api/monetization' });
 }
 
 /**
