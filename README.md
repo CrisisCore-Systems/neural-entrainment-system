@@ -132,13 +132,17 @@ Visit http://localhost:5173 🎉
 
 # Create database
 
-#### Reference & Specscreatedb neural_entrainment
+createdb neural_entrainment
+psql -d neural_entrainment -f database/schema.sql
 
-- [docs/reference/App_prd.md](./docs/reference/App_prd.md) - Product requirements documentpsql -d neural_entrainment -f database/schema.sql
+#### Reference & Specs
 
+- [docs/reference/App_prd.md](./docs/reference/App_prd.md) - Product requirements document
 - [docs/reference/App_devdocs.md](./docs/reference/App_devdocs.md) - Development reference
+- [docs/reference/TROUBLESHOOTING.md](./docs/reference/TROUBLESHOOTING.md) - Common issues & solutions
+- [docs/reference/GO_TO_MARKET_PLAYBOOK.md](./docs/reference/GO_TO_MARKET_PLAYBOOK.md) - Comprehensive go-to-market and revenue plan
 
-- [docs/reference/TROUBLESHOOTING.md](./docs/reference/TROUBLESHOOTING.md) - Common issues & solutions# Start backend
+# Start backend
 
 npm run dev
 
